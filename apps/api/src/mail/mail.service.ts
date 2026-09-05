@@ -1,23 +1,39 @@
 import { BRAND, COLORS } from "@mamuy/shared";
 import { Injectable } from "@nestjs/common";
-import * as nodemailer from "nodemailer";
 
 @Injectable()
 export class MailService {
-  private transporter = nodemailer.createTransport({
-    host: "smtp.resend.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: "resend",
-      pass: process.env.RESEND_API_KEY,
-    },
-  });
+  private async send(options: { to: string; subject: string; text: string; html: string }) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      throw new Error("RESEND_API_KEY is not set");
+    }
+
+    const from = process.env.MAIL_FROM ?? `${BRAND.name} <noreply@mamuy.dev>`;
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from,
+        to: [options.to],
+        subject: options.subject,
+        text: options.text,
+        html: options.html,
+      }),
+      signal: AbortSignal.timeout(15_000),
+    });
+
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`Resend API ${res.status}: ${body}`);
+    }
+  }
 
   async sendPasswordResetEmail(email: string, resetUrl: string) {
-    const from = process.env.MAIL_FROM ?? `${BRAND.name} <noreply@mamuy.dev>`;
-    await this.transporter.sendMail({
-      from,
+    await this.send({
       to: email,
       subject: `Reset your ${BRAND.name} password`,
       text: `Reset your password using this link:\n${resetUrl}\n\nThis link expires in 30 minutes and can be used once.\nIf you didn't request a reset, ignore this email.`,
@@ -48,9 +64,7 @@ export class MailService {
   }
 
   async sendOtp(email: string, otp: string) {
-    const from = process.env.MAIL_FROM ?? `${BRAND.name} <noreply@mamuy.dev>`;
-    await this.transporter.sendMail({
-      from,
+    await this.send({
       to: email,
       subject: `${otp} is your ${BRAND.name} code`,
       text: `Your verification code is ${otp}\nIt expires in 10 minutes\nIf you didn't create an account, ignore this email`,
