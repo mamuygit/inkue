@@ -13,7 +13,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
-import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -104,16 +103,6 @@ export default function QrManagePage() {
     },
   });
 
-  const moveQr = useMutation({
-    mutationFn: async ({ id, folderId }: { id: string; folderId: string | null }) =>
-      apiFetch<QrRecord>(`/qr/${id}`, {
-        method: "PATCH",
-        token,
-        body: JSON.stringify({ folderId }),
-      }),
-    onSuccess: invalidateLists,
-  });
-
   const qrs = list.data ?? [];
   const folderRows = folders.data ?? [];
   const grouped = folderRows.map((folder) => ({
@@ -122,50 +111,60 @@ export default function QrManagePage() {
   }));
   const unfiled = qrs.filter((qr) => !qr.folderId);
 
-  const renderQrRow = (qr: QrRecord) => (
-    <Paper key={qr.id} variant="outlined" sx={{ p: 2, display: "flex", gap: 2, alignItems: "center" }}>
-      <Box
-        component={LocaleLink}
-        href={`/dashboard/${qr.id}`}
-        sx={{ display: "flex", gap: 2, alignItems: "center", flex: 1, minWidth: 0, textDecoration: "none", color: "inherit" }}
-      >
-        <Box component="img" src={qr.imageUrl} alt="" sx={{ width: 72, height: 72, borderRadius: 1, bgcolor: "#fff" }} />
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Typography fontWeight={700} noWrap>
-            {qr.title || qr.destinationUrl}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" noWrap>
-            {qr.scanUrl}
-          </Typography>
-        </Box>
-        <Typography fontWeight={700} sx={{ whiteSpace: "nowrap" }}>
-          {t("dashboard.scanCount", { count: qr.scanCount })}
-        </Typography>
-      </Box>
-      <TextField
-        select
-        size="small"
-        label={t("dashboard.moveTo")}
-        value={qr.folderId ?? ""}
-        sx={{ minWidth: 160 }}
-        onChange={(e) => moveQr.mutate({ id: qr.id, folderId: e.target.value || null })}
-      >
-        <MenuItem value="">{t("dashboard.unfiled")}</MenuItem>
-        {folderRows.map((folder) => (
-          <MenuItem key={folder.id} value={folder.id}>
-            {folder.name}
-          </MenuItem>
-        ))}
-      </TextField>
-      <IconButton
-        size="small"
-        aria-label={t("dashboard.deleteQr")}
-        onClick={() => setDialog({ mode: "deleteQr", id: qr.id, name: qr.title || qr.destinationUrl })}
-      >
-        <DeleteOutlineIcon fontSize="small" />
-      </IconButton>
-    </Paper>
-  );
+  const renderQrRow = (qr: QrRecord) => {
+    const title = qr.title?.trim();
+    return (
+      <Paper key={qr.id} variant="outlined" sx={{ p: 2 }}>
+        <Stack direction="row" spacing={2} alignItems="flex-start">
+          <Box
+            component={LocaleLink}
+            href={`/dashboard/${qr.id}`}
+            sx={{
+              display: "flex",
+              gap: 2,
+              alignItems: "flex-start",
+              flex: 1,
+              minWidth: 0,
+              textDecoration: "none",
+              color: "inherit",
+              "&:hover .qr-title": { color: "primary.main" },
+            }}
+          >
+            <Box
+              component="img"
+              src={qr.imageUrl}
+              alt=""
+              sx={{ width: 72, height: 72, borderRadius: 1, bgcolor: "#fff", flexShrink: 0 }}
+            />
+            <Box sx={{ minWidth: 0, flex: 1 }}>
+              <Stack direction="row" spacing={1.5} alignItems="baseline" justifyContent="space-between" sx={{ mb: 0.5 }}>
+                <Typography className="qr-title" fontWeight={700} sx={{ wordBreak: "break-word" }}>
+                  {title || t("dashboard.untitled")}
+                </Typography>
+                <Typography variant="body2" fontWeight={700} color="text.secondary" sx={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+                  {t("dashboard.scanCount", { count: qr.scanCount })}
+                </Typography>
+              </Stack>
+              <Typography variant="body2" sx={{ wordBreak: "break-all" }}>
+                {qr.destinationUrl}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ wordBreak: "break-all" }}>
+                {qr.scanUrl}
+              </Typography>
+            </Box>
+          </Box>
+          <IconButton
+            size="small"
+            aria-label={t("dashboard.deleteQr")}
+            onClick={() => setDialog({ mode: "deleteQr", id: qr.id, name: title || qr.destinationUrl })}
+            sx={{ flexShrink: 0, mt: -0.5 }}
+          >
+            <DeleteOutlineIcon fontSize="small" />
+          </IconButton>
+        </Stack>
+      </Paper>
+    );
+  };
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>

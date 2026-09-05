@@ -6,6 +6,7 @@ import { localeFromPathname, localizedPath, stripLocalePrefix } from "@/i18n/pat
 function isSkipped(pathname: string) {
   if (pathname.startsWith("/api")) return true;
   if (pathname.startsWith("/_next")) return true;
+  if (pathname === "/r" || pathname.startsWith("/r/")) return true;
   if (pathname === "/sitemap.xml" || pathname === "/robots.txt") return true;
   if (/\.[a-zA-Z0-9]+$/.test(pathname)) return true;
   return false;

@@ -9,7 +9,10 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@mamuy/shared"],
   async rewrites() {
     const api = (process.env.API_INTERNAL_URL ?? "http://localhost:3001").replace(/\/$/, "");
-    return [{ source: "/api/v1/:path*", destination: `${api}/api/v1/:path*` }];
+    return [
+      { source: "/api/v1/:path*", destination: `${api}/api/v1/:path*` },
+      { source: "/r/:hash", destination: `${api}/r/:hash` },
+    ];
   },
   images: {
     remotePatterns: [
