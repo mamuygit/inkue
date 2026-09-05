@@ -70,6 +70,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       description,
       images: ["/og.png"],
     },
+    verification: {
+      google: "zLj3F4ZvVBOWSMEDWDvxCF1srWh0mQ9N81k094zHC5c",
+    },
     icons: {
       icon: [{ url: "/favicon.svg?v=a", type: "image/svg+xml" }, { url: "/logo.png?v=a" }],
       apple: "/apple-touch-icon.png?v=a",
