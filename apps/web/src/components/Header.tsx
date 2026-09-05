@@ -58,8 +58,7 @@ export function Header() {
         <Box
           sx={{
             display: {
-              xs: "none",
-              sm: inApp ? "none" : "flex",
+              xs: inApp ? "none" : "flex",
               md: "flex",
             },
           }}
@@ -70,7 +69,7 @@ export function Header() {
 
       <Box
         sx={{
-          display: inApp ? { xs: "flex", md: "none" } : { xs: "flex", sm: "none" },
+          display: inApp ? { xs: "flex", md: "none" } : "none",
           position: "absolute",
           left: "50%",
           transform: "translateX(-50%)",

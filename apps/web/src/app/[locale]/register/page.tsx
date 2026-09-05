@@ -12,10 +12,13 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = await resolveLocale(params);
   const { t } = await getT(locale);
-  return publicPageMetadata("/register", locale, {
-    title: t("register.title"),
-    description: t("register.description", { name: BRAND.name }),
-  });
+  return {
+    ...publicPageMetadata("/register", locale, {
+      title: t("register.title"),
+      description: t("register.description", { name: BRAND.name }),
+    }),
+    robots: { index: false, follow: true },
+  };
 }
 
 export default async function RegisterPage({ searchParams }: Props) {

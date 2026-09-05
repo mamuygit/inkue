@@ -12,10 +12,13 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = await resolveLocale(params);
   const { t } = await getT(locale);
-  return publicPageMetadata("/forgot-password", locale, {
-    title: t("forgot.title"),
-    description: t("forgot.description", { name: BRAND.name }),
-  });
+  return {
+    ...publicPageMetadata("/forgot-password", locale, {
+      title: t("forgot.title"),
+      description: t("forgot.description", { name: BRAND.name }),
+    }),
+    robots: { index: false, follow: true },
+  };
 }
 
 export default async function ForgotPasswordPage({ searchParams }: Props) {
