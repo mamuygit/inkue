@@ -18,8 +18,10 @@ RUN pnpm --filter @mamuy/shared build && pnpm --filter @mamuy/api build
 FROM node:20-bookworm-slim
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=build /app/apps/api/dist ./dist
-COPY --from=build /app/apps/api/node_modules ./node_modules
-COPY --from=build /app/node_modules ./root_modules
+COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/packages/shared ./packages/shared
+COPY --from=build /app/apps/api/package.json ./apps/api/package.json
+COPY --from=build /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=build /app/apps/api/dist ./apps/api/dist
+WORKDIR /app/apps/api
 CMD ["node", "dist/main.js"]
