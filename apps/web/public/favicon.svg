@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="inkue-bg" x1="8" y1="2" x2="60" y2="62" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1E3A8A"/>
+      <stop offset="1" stop-color="#0B1F3A"/>
+    </linearGradient>
+    <linearGradient id="inkue-drop" x1="38" y1="34" x2="58" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7DD3FC"/>
+      <stop offset="1" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="32" fill="url(#inkue-bg)"/>
+  <rect x="7.6" y="7.6" width="17.2" height="17.2" rx="3.6" stroke="#E0F2FE" stroke-width="2.7"/>
+  <rect x="13" y="13" width="6.4" height="6.4" rx="1.4" fill="#38BDF8"/>
+  <rect x="39.2" y="7.6" width="17.2" height="17.2" rx="3.6" stroke="#E0F2FE" stroke-width="2.7"/>
+  <rect x="44.6" y="13" width="6.4" height="6.4" rx="1.4" fill="#38BDF8"/>
+  <rect x="7.6" y="39.2" width="17.2" height="17.2" rx="3.6" stroke="#E0F2FE" stroke-width="2.7"/>
+  <rect x="13" y="44.6" width="6.4" height="6.4" rx="1.4" fill="#38BDF8"/>
+  <path fill="url(#inkue-drop)" d="M47.4 35.4c5.4 0 9.8 4.4 9.8 10 0 7.4-9.8 16.2-9.8 16.2S37.6 52.8 37.6 45.4c0-5.6 4.4-10 9.8-10z"/>
+  <ellipse cx="50" cy="43.6" rx="2.6" ry="3.8" fill="#F0F9FF" opacity="0.45"/>
+  <rect x="29.2" y="26.6" width="4.4" height="4.4" rx="1" fill="#38BDF8"/>
+  <rect x="35" y="26.6" width="4.4" height="4.4" rx="1" fill="#7DD3FC"/>
+  <rect x="26.4" y="32.2" width="4.4" height="4.4" rx="1" fill="#818CF8"/>
+  <rect x="32.2" y="32.2" width="4.4" height="4.4" rx="1" fill="#60A5FA"/>
+  <rect x="37.8" y="32.2" width="4.4" height="4.4" rx="1" fill="#38BDF8"/>
+  <rect x="29.2" y="37.8" width="4.4" height="4.4" rx="1" fill="#C4B5FD"/>
+  <rect x="35" y="37.8" width="4.4" height="4.4" rx="1" fill="#93C5FD" opacity="0.9"/>
+</svg>

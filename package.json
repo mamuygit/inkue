@@ -1,0 +1,17 @@
+{
+  "name": "mamuy-qr",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "pnpm --filter @mamuy/shared build && pnpm --parallel --filter @mamuy/web --filter @mamuy/api dev",
+    "dev:web": "pnpm --filter @mamuy/web dev",
+    "dev:api": "pnpm --filter @mamuy/api dev",
+    "build": "pnpm --filter @mamuy/shared build && pnpm --filter @mamuy/api build && pnpm --filter @mamuy/web build"
+  },
+  "devDependencies": {
+    "pnpm": "9.15.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
