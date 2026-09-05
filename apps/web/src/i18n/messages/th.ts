@@ -248,6 +248,7 @@ export const th: Messages = {
     logoRequired: "กรุณาเลือกไฟล์โลโก้",
     logoType: "รองรับเฉพาะ PNG, JPG, WEBP, SVG",
     logoSize: "ไฟล์ต้องไม่เกิน 2MB",
+    logoMissing: "ไม่พบโลโก้ที่อัปโหลด",
     qrCreateFailed: "สร้างรหัส QR ไม่สำเร็จ กรุณาลองใหม่",
     logoUnreadable: "อ่านไฟล์โลโก้ไม่ได้ ลองใช้ PNG หรือ JPG แทน",
     qrNotFound: "ไม่พบ QR นี้",

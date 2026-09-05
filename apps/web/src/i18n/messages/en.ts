@@ -247,6 +247,7 @@ export const en = {
     logoRequired: "Please choose a logo file",
     logoType: "Only PNG, JPG, WEBP, and SVG are supported",
     logoSize: "File must be 2MB or smaller",
+    logoMissing: "Uploaded logo not found",
     qrCreateFailed: "Couldn't create a QR code. Please try again.",
     logoUnreadable: "Couldn't read that logo. Try a PNG or JPG instead.",
     qrNotFound: "QR not found",

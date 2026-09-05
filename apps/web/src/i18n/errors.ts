@@ -55,7 +55,7 @@ export function translateMessage(t: Translator, message?: string) {
   return key ? t(key) : message;
 }
 
-export function translateApiError(t: Translator, err: ApiError) {
+export function translateApiError(t: Translator, err: ApiError): string {
   if (err.code === "OTP_COOLDOWN") {
     return t("errors.otpCooldown", { seconds: err.retryAfterSec ?? 0 });
   }
@@ -63,6 +63,6 @@ export function translateApiError(t: Translator, err: ApiError) {
     return t(CODE_MAP[err.code]);
   }
   const wait = err.message.match(/^Wait (\d+) seconds/);
-  if (wait) return t("errors.otpCooldown", { seconds: wait[1] });
-  return translateMessage(t, err.message);
+  if (wait) return t("errors.otpCooldown", { seconds: wait[1] ?? 0 });
+  return translateMessage(t, err.message) ?? err.message ?? t("errors.generic");
 }
