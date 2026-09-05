@@ -3,6 +3,7 @@ import { Inter, Noto_Sans_Thai } from "next/font/google";
 import { BRAND } from "@mamuy/shared";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { Providers } from "@/components/Providers";
 import { SiteShell } from "@/components/SiteShell";
 import { LOCALES, isLocale } from "@/i18n/config";
@@ -104,6 +105,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={`${inter.variable} ${notoThai.variable}`} suppressHydrationWarning>
       <body className={locale === "th" ? notoThai.className : inter.className}>
+        <GoogleAnalytics />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <Providers locale={locale} session={session}>
           <SiteShell>{children}</SiteShell>
