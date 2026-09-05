@@ -3,13 +3,14 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
 import { useI18n } from "@/i18n/LocaleProvider";
 
 const FEATURES = [
-  { key: "home.featureLogo", src: "/features/logo.jpg" },
-  { key: "home.featureLink", src: "/features/link.jpg" },
-  { key: "home.featureScans", src: "/features/scans.jpg" },
+  { key: "home.featureLogo", body: "home.featureLogoBody", src: "/features/logo.jpg" },
+  { key: "home.featureLink", body: "home.featureLinkBody", src: "/features/link.jpg" },
+  { key: "home.featureScans", body: "home.featureScansBody", src: "/features/scans.jpg" },
 ] as const;
 
 export function FeatureFrames() {
@@ -27,7 +28,6 @@ export function FeatureFrames() {
           <Box
             key={item.src}
             sx={{
-              position: "relative",
               overflow: "hidden",
               borderRadius: 5,
               bgcolor: "#fff",
@@ -41,34 +41,39 @@ export function FeatureFrames() {
               },
             }}
           >
-            <Box
-              component="img"
-              src={item.src}
-              alt={t(item.key)}
-              sx={{
-                width: "100%",
-                aspectRatio: "1 / 1",
-                objectFit: "cover",
-                display: "block",
-              }}
-            />
-            <Chip
-              label={t(item.key)}
-              sx={{
-                position: "absolute",
-                left: "50%",
-                bottom: 16,
-                transform: "translateX(-50%)",
-                height: 36,
-                px: 1,
-                fontWeight: 700,
-                bgcolor: "rgba(255,255,255,0.94)",
-                color: "text.primary",
-                backdropFilter: "blur(8px)",
-                boxShadow: "0 10px 24px rgba(15, 23, 42, 0.12)",
-                "& .MuiChip-label": { px: 1.5 },
-              }}
-            />
+            <Box sx={{ position: "relative" }}>
+              <Box
+                component="img"
+                src={item.src}
+                alt={t(item.key)}
+                sx={{
+                  width: "100%",
+                  aspectRatio: "1 / 1",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+              <Chip
+                label={t(item.key)}
+                sx={{
+                  position: "absolute",
+                  left: "50%",
+                  bottom: 16,
+                  transform: "translateX(-50%)",
+                  height: 36,
+                  px: 1,
+                  fontWeight: 700,
+                  bgcolor: "#fff",
+                  color: "text.primary",
+                  backdropFilter: "blur(8px)",
+                  boxShadow: "0 10px 24px rgba(15, 23, 42, 0.12)",
+                  "& .MuiChip-label": { px: 1.5 },
+                }}
+              />
+            </Box>
+            <Typography color="text.secondary" sx={{ px: 2.5, py: 2, fontSize: 15, lineHeight: 1.5 }}>
+              {t(item.body)}
+            </Typography>
           </Box>
         ))}
       </Box>

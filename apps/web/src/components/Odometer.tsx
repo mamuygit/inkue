@@ -18,7 +18,13 @@ export function Odometer({ value }: { value: number }) {
   const digits = padCount(value).split("");
   const dateLocale = locale === "th" ? "th-TH" : "en-US";
   return (
-    <Stack direction="row" spacing={0.75} justifyContent="center" aria-label={t("home.odometerAria", { count: value.toLocaleString(dateLocale) })}>
+    <Stack
+      direction="row"
+      spacing={0.75}
+      justifyContent="center"
+      role="img"
+      aria-label={t("home.odometerAria", { count: value.toLocaleString(dateLocale) })}
+    >
       {digits.map((d, i) => (
         <Paper
           key={`${i}-${digits.length}`}

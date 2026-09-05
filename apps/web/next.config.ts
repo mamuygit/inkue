@@ -26,6 +26,14 @@ const nextConfig: NextConfig = {
           { key: "Access-Control-Allow-Origin", value: "*" },
         ],
       },
+      {
+        source: "/llms.txt",
+        headers: [{ key: "Content-Type", value: "text/plain; charset=utf-8" }],
+      },
+      {
+        source: "/llms-full.txt",
+        headers: [{ key: "Content-Type", value: "text/plain; charset=utf-8" }],
+      },
     ];
   },
 };

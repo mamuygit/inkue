@@ -54,7 +54,10 @@ export default async function HomePage({ params }: Props) {
       >
         <Container maxWidth="md">
           <Typography component="h1" variant="h2" textAlign="center" sx={{ fontSize: { xs: 36, md: 56 } }}>
-            {t("brand.tagline")}
+            {t("home.headline")}
+          </Typography>
+          <Typography textAlign="center" sx={{ mt: 2, fontSize: { xs: 18, md: 20 }, fontWeight: 600, color: "text.primary" }}>
+            {t("home.aioSummary")}
           </Typography>
           <Typography textAlign="center" color="text.secondary" sx={{ mt: 2, fontSize: 18 }}>
             {t("home.subtitle", { domain: BRAND.scanDomain })}
@@ -63,7 +66,13 @@ export default async function HomePage({ params }: Props) {
             <Button component={LocaleLink} href="/dashboard/qr/create" variant="contained" size="large">
               {t("home.ctaCreate")}
             </Button>
-            <Button component={LocaleLink} href="/faq" variant="outlined" size="large">
+            <Button
+              component={LocaleLink}
+              href="/faq"
+              variant="outlined"
+              size="large"
+              sx={{ color: "primary.dark", borderColor: "currentColor" }}
+            >
               {t("home.ctaHow")}
             </Button>
           </Stack>

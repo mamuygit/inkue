@@ -55,8 +55,24 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     applicationName: BRAND.name,
     keywords:
       locale === "th"
-        ? ["Inkue", "QR Code", "สร้าง QR ฟรี", "QR โลโก้", "เปลี่ยนลิงก์ QR", "short link QR"]
-        : ["Inkue", "QR Code", "free QR", "QR with logo", "dynamic QR", "short link QR", "track QR scan"],
+        ? [
+            "Inkue",
+            "เครื่องมือสร้าง QR Code ฟรี",
+            "QR Code Generator ฟรี",
+            "สร้าง QR ฟรี",
+            "QR โลโก้",
+            "เปลี่ยนลิงก์ QR",
+            "dynamic QR",
+          ]
+        : [
+            "Inkue",
+            "free QR code generator",
+            "QR Code Generator",
+            "QR with logo",
+            "dynamic QR",
+            "change QR link",
+            "track QR scan",
+          ],
     authors: [{ name: BRAND.name, url: appUrl }],
     openGraph: {
       type: "website",
@@ -93,18 +109,45 @@ export default async function LocaleLayout({ children, params }: Props) {
     "@graph": [
       {
         "@type": "Organization",
+        "@id": `${appUrl}/#organization`,
         name: BRAND.name,
+        alternateName: ["qr.mamuy.dev", "Mamuy Dev QR"],
         url: appUrl,
         logo: `${appUrl}/logo.png`,
+        founder: { "@type": "Person", name: "Mamuy Dev", url: "https://mamuy.dev" },
       },
       {
-        "@type": "SoftwareApplication",
+        "@type": ["WebApplication", "SoftwareApplication"],
+        "@id": `${appUrl}/#app`,
         name: BRAND.name,
-        applicationCategory: "UtilitiesApplication",
-        operatingSystem: "Web",
-        offers: { "@type": "Offer", price: "0", priceCurrency: "THB" },
-        description: t("brand.description", { name: BRAND.name }),
+        alternateName: ["Inkue QR Code Generator", "qr.mamuy.dev"],
         url: appUrl,
+        image: `${appUrl}/og.png`,
+        screenshot: `${appUrl}/og.png`,
+        applicationCategory: "UtilitiesApplication",
+        applicationSubCategory: "QR Code Generator",
+        operatingSystem: "Any",
+        browserRequirements: "Requires HTML5 and a modern web browser",
+        inLanguage: ["en", "th"],
+        isAccessibleForFree: true,
+        description: t("brand.description", { name: BRAND.name }),
+        featureList: [
+          t("home.featureLogoBody"),
+          t("home.featureLinkBody"),
+          t("home.featureScansBody"),
+        ],
+        offers: { "@type": "Offer", price: "0", priceCurrency: "THB", availability: "https://schema.org/InStock" },
+        publisher: { "@id": `${appUrl}/#organization` },
+        creator: { "@id": `${appUrl}/#organization` },
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${appUrl}/#website`,
+        name: BRAND.name,
+        url: appUrl,
+        inLanguage: ["en", "th"],
+        description: t("home.aioSummary"),
+        publisher: { "@id": `${appUrl}/#organization` },
       },
     ],
   };

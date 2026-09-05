@@ -34,7 +34,7 @@ export function LangSwitch() {
             key={item}
             component={NextLink}
             href={switchLocalePath(pathname, item)}
-            aria-pressed={active}
+            aria-current={active ? "true" : undefined}
             hrefLang={item}
             onClick={() => persistLocale(item)}
             sx={{
@@ -54,7 +54,7 @@ export function LangSwitch() {
               letterSpacing: "0.04em",
               lineHeight: 1,
               bgcolor: active ? "primary.main" : "transparent",
-              color: active ? "#fff" : "#64748B",
+              color: active ? "#fff" : "#334155",
               transition: "background-color 160ms ease, color 160ms ease",
               "&:hover": {
                 bgcolor: active ? "primary.dark" : "rgba(255,255,255,0.7)",

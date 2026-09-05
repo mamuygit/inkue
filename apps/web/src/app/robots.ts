@@ -13,10 +13,26 @@ const SOCIAL_CRAWLERS = [
   "TelegramBot",
 ];
 
+const AI_CRAWLERS = [
+  "GPTBot",
+  "ChatGPT-User",
+  "Google-Extended",
+  "Googlebot",
+  "PerplexityBot",
+  "ClaudeBot",
+  "anthropic-ai",
+  "Applebot",
+  "Bytespider",
+  "CCBot",
+  "cohere-ai",
+  "YouBot",
+  "Amazonbot",
+];
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      ...SOCIAL_CRAWLERS.map((userAgent) => ({
+      ...[...SOCIAL_CRAWLERS, ...AI_CRAWLERS].map((userAgent) => ({
         userAgent,
         allow: "/",
       })),

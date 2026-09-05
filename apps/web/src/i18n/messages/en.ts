@@ -31,6 +31,9 @@ export const en = {
     label: "Language",
   },
   home: {
+    headline: "Free QR Code Generator",
+    aioSummary:
+      "Inkue at qr.mamuy.dev is a free QR code generator: add your logo, change the destination anytime without reprinting, and track scans. No ads, no paywall. Made in Thailand.",
     subtitle:
       "Scans go through {domain} first, then to your destination — update the URL without reprinting the QR.",
     ctaCreate: "Create a free QR",
@@ -39,15 +42,18 @@ export const en = {
     odometerCaption: "Always at least 7 digits, based on the real count",
     odometerAria: "{count} QR codes created",
     featureLogo: "Your logo",
+    featureLogoBody: "Drop your brand mark onto the QR. High error correction keeps it scannable.",
     featureLink: "Change the link",
+    featureLinkBody: "The printed code stays the same. Update the destination URL whenever you need.",
     featureScans: "See scans",
+    featureScansBody: "See how often each code is scanned after people use it in the real world.",
   },
   footer: {
     copy: "Free to use, never required to pay",
   },
   faq: {
     title: "FAQ",
-    description: "How to use {name} to create free QR codes, add a logo, change the link, and track scans",
+    description: "How to use {name}, a free QR code generator, to add a logo, change the link, and track scans",
     q1: "Is it really free?",
     a1: "Yes. Create QR codes at no cost, with no paywall. If you'd like to support the team, you can Donate via PayPal.",
     q2: "Why doesn't a scan go straight to my site?",
@@ -58,6 +64,8 @@ export const en = {
     a4: "Yes. The hash is created once. Printed codes still point to the same scan URL — just update the destination in the dashboard.",
     q5: "How do I verify my email?",
     a5: "When you register, we email a 6-digit OTP. You can send up to 5 codes per email per day (Bangkok time, UTC+7). After that, wait until the next day to request a new code.",
+    q6: "Is Inkue a free QR code generator?",
+    a6: "Yes. Inkue at qr.mamuy.dev is a free online QR code generator with logo support, editable destination links, and scan tracking. There is no ad wall and no required payment.",
   },
   privacy: {
     title: "Privacy",

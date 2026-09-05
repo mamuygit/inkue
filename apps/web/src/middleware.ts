@@ -4,13 +4,14 @@ import { LOCALE_COOKIE, LOCALE_HEADER, type Locale } from "@/i18n/config";
 import { localeFromPathname, localizedPath, stripLocalePrefix } from "@/i18n/path";
 
 const CRAWLER_UA =
-  /facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|Discordbot|TelegramBot|Googlebot|bingbot|Applebot/i;
+  /facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|Discordbot|TelegramBot|Googlebot|Google-Extended|bingbot|Applebot|GPTBot|ChatGPT-User|PerplexityBot|ClaudeBot|anthropic-ai|Bytespider|CCBot|Amazonbot|YouBot/i;
 
 function isSkipped(pathname: string) {
   if (pathname.startsWith("/api")) return true;
   if (pathname.startsWith("/_next")) return true;
   if (pathname === "/r" || pathname.startsWith("/r/")) return true;
   if (pathname === "/sitemap.xml" || pathname === "/robots.txt") return true;
+  if (pathname === "/llms.txt" || pathname === "/llms-full.txt") return true;
   if (/\.[a-zA-Z0-9]+$/.test(pathname)) return true;
   return false;
 }
