@@ -3,6 +3,9 @@ import type { NextRequest } from "next/server";
 import { LOCALE_COOKIE, LOCALE_HEADER, type Locale } from "@/i18n/config";
 import { localeFromPathname, localizedPath, stripLocalePrefix } from "@/i18n/path";
 
+const CRAWLER_UA =
+  /facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|Discordbot|TelegramBot|Googlebot|bingbot|Applebot/i;
+
 function isSkipped(pathname: string) {
   if (pathname.startsWith("/api")) return true;
   if (pathname.startsWith("/_next")) return true;
@@ -19,7 +22,9 @@ function withLocaleHeaders(req: NextRequest, locale: Locale, init?: { rewrite?: 
     ? NextResponse.rewrite(init.rewrite, { request: { headers: requestHeaders } })
     : NextResponse.next({ request: { headers: requestHeaders } });
   res.headers.set(LOCALE_HEADER, locale);
-  res.cookies.set(LOCALE_COOKIE, locale, { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" });
+  if (!CRAWLER_UA.test(req.headers.get("user-agent") ?? "")) {
+    res.cookies.set(LOCALE_COOKIE, locale, { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" });
+  }
   return res;
 }
 

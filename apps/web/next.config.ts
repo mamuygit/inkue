@@ -17,6 +17,17 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "sgp1.digitaloceanspaces.com" },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: "/og.png",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=86400, immutable" },
+          { key: "Access-Control-Allow-Origin", value: "*" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

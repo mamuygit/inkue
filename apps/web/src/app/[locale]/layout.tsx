@@ -7,6 +7,7 @@ import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { Providers } from "@/components/Providers";
 import { SiteShell } from "@/components/SiteShell";
 import { LOCALES, isLocale } from "@/i18n/config";
+import { OG_IMAGE } from "@/i18n/metadata";
 import { resolveLocale } from "@/i18n/server";
 import { getMessages, createTranslator } from "@/i18n/translate";
 import { authOptions } from "@/lib/auth";
@@ -42,6 +43,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const tagline = t("brand.tagline");
   const description = t("brand.description", { name: BRAND.name });
   const title = `${BRAND.name} | ${tagline}`;
+  const ogTitle = t("brand.ogTitle");
+  const ogDescription = t("brand.ogDescription");
   return {
     metadataBase: new URL(appUrl),
     title: {
@@ -58,17 +61,18 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     openGraph: {
       type: "website",
       siteName: BRAND.name,
-      title,
-      description,
-      images: [{ url: "/og.png", width: 1200, height: 630, alt: title }],
+      title: ogTitle,
+      description: ogDescription,
+      url: appUrl,
+      images: [{ ...OG_IMAGE, alt: `${BRAND.name} logo` }],
       locale: locale === "th" ? "th_TH" : "en_US",
       alternateLocale: locale === "th" ? ["en_US"] : ["th_TH"],
     },
     twitter: {
       card: "summary_large_image",
-      title,
-      description,
-      images: ["/og.png"],
+      title: ogTitle,
+      description: ogDescription,
+      images: [OG_IMAGE.url],
     },
     verification: {
       google: "zLj3F4ZvVBOWSMEDWDvxCF1srWh0mQ9N81k094zHC5c",

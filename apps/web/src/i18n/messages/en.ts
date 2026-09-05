@@ -3,6 +3,9 @@ export const en = {
     tagline: "Free QR codes with logos — change the link anytime",
     description:
       "{name} — free QR codes with your logo. Change the destination anytime without reprinting, and track every scan.",
+    ogTitle: "Inkue — Free QR codes with your logo",
+    ogDescription:
+      "Create free QR codes with your logo. Change the destination anytime without reprinting, and track every scan.",
   },
   nav: {
     faq: "FAQ",

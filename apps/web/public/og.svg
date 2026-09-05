@@ -12,14 +12,19 @@
       <stop stop-color="#7DD3FC"/>
       <stop offset="1" stop-color="#2563EB"/>
     </linearGradient>
-    <radialGradient id="og-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(930 300) rotate(90) scale(280 260)">
-      <stop stop-color="#38BDF8" stop-opacity="0.28"/>
+    <radialGradient id="og-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(930 315) rotate(90) scale(300 280)">
+      <stop stop-color="#38BDF8" stop-opacity="0.32"/>
       <stop offset="1" stop-color="#38BDF8" stop-opacity="0"/>
     </radialGradient>
+    <filter id="og-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#020617" flood-opacity="0.35"/>
+    </filter>
   </defs>
   <rect width="1200" height="630" fill="url(#og-bg)"/>
-  <circle cx="930" cy="300" r="280" fill="url(#og-glow)"/>
-  <g transform="translate(790 140) scale(4.375)">
+  <circle cx="930" cy="315" r="300" fill="url(#og-glow)"/>
+
+  <!-- Wordmark logo: Inkue mark + name (matches site header) -->
+  <g transform="translate(72 86) scale(1.5)">
     <circle cx="32" cy="32" r="32" fill="url(#og-mark-bg)"/>
     <rect x="7.6" y="7.6" width="17.2" height="17.2" rx="3.6" stroke="#E0F2FE" stroke-width="2.7"/>
     <rect x="13" y="13" width="6.4" height="6.4" rx="1.4" fill="#38BDF8"/>
@@ -37,9 +42,32 @@
     <rect x="29.2" y="37.8" width="4.4" height="4.4" rx="1" fill="#C4B5FD"/>
     <rect x="35" y="37.8" width="4.4" height="4.4" rx="1" fill="#93C5FD" opacity="0.9"/>
   </g>
-  <text x="72" y="248" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="84" font-weight="700">Inkue</text>
-  <text x="72" y="318" fill="#BFDBFE" font-family="Arial, Helvetica, sans-serif" font-size="28">Free QR codes. Your logo. Change the link anytime.</text>
-  <rect x="72" y="360" width="168" height="44" rx="22" fill="#38BDF8"/>
-  <text x="156" y="390" text-anchor="middle" fill="#0B1F3A" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">100% Free</text>
-  <text x="72" y="560" fill="#93C5FD" font-family="Arial, Helvetica, sans-serif" font-size="22">qr.mamuy.dev</text>
+  <text x="188" y="154" fill="#FFFFFF" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="64" font-weight="700">Inkue</text>
+
+  <text x="72" y="268" fill="#FFFFFF" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="48" font-weight="700">Free QR codes with your logo</text>
+  <text x="72" y="326" fill="#BFDBFE" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="26">Change the destination anytime — no reprinting.</text>
+
+  <rect x="72" y="368" width="168" height="44" rx="22" fill="#38BDF8"/>
+  <text x="156" y="397" text-anchor="middle" fill="#0B1F3A" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" font-weight="700">100% Free</text>
+  <text x="72" y="560" fill="#93C5FD" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22">qr.mamuy.dev</text>
+
+  <!-- Large logo for share preview -->
+  <g transform="translate(792 147) scale(4.7)" filter="url(#og-shadow)">
+    <circle cx="32" cy="32" r="32" fill="url(#og-mark-bg)"/>
+    <rect x="7.6" y="7.6" width="17.2" height="17.2" rx="3.6" stroke="#E0F2FE" stroke-width="2.7"/>
+    <rect x="13" y="13" width="6.4" height="6.4" rx="1.4" fill="#38BDF8"/>
+    <rect x="39.2" y="7.6" width="17.2" height="17.2" rx="3.6" stroke="#E0F2FE" stroke-width="2.7"/>
+    <rect x="44.6" y="13" width="6.4" height="6.4" rx="1.4" fill="#38BDF8"/>
+    <rect x="7.6" y="39.2" width="17.2" height="17.2" rx="3.6" stroke="#E0F2FE" stroke-width="2.7"/>
+    <rect x="13" y="44.6" width="6.4" height="6.4" rx="1.4" fill="#38BDF8"/>
+    <path fill="url(#og-drop)" d="M47.4 35.4c5.4 0 9.8 4.4 9.8 10 0 7.4-9.8 16.2-9.8 16.2S37.6 52.8 37.6 45.4c0-5.6 4.4-10 9.8-10z"/>
+    <ellipse cx="50" cy="43.6" rx="2.6" ry="3.8" fill="#F0F9FF" opacity="0.45"/>
+    <rect x="29.2" y="26.6" width="4.4" height="4.4" rx="1" fill="#38BDF8"/>
+    <rect x="35" y="26.6" width="4.4" height="4.4" rx="1" fill="#7DD3FC"/>
+    <rect x="26.4" y="32.2" width="4.4" height="4.4" rx="1" fill="#818CF8"/>
+    <rect x="32.2" y="32.2" width="4.4" height="4.4" rx="1" fill="#60A5FA"/>
+    <rect x="37.8" y="32.2" width="4.4" height="4.4" rx="1" fill="#38BDF8"/>
+    <rect x="29.2" y="37.8" width="4.4" height="4.4" rx="1" fill="#C4B5FD"/>
+    <rect x="35" y="37.8" width="4.4" height="4.4" rx="1" fill="#93C5FD" opacity="0.9"/>
+  </g>
 </svg>

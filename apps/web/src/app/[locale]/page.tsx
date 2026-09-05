@@ -9,7 +9,7 @@ import { FeatureFrames } from "@/components/FeatureFrames";
 import { LocaleLink } from "@/components/LocaleLink";
 import { Odometer, OdometerCaption } from "@/components/Odometer";
 import { getApiUrl } from "@/lib/api";
-import { localeAlternates } from "@/i18n/metadata";
+import { publicPageMetadata } from "@/i18n/metadata";
 import { getT, resolveLocale } from "@/i18n/server";
 
 async function getTotalQr() {
@@ -30,9 +30,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { t } = await getT(locale);
   const title = `${BRAND.name} | ${t("brand.tagline")}`;
   return {
+    ...publicPageMetadata("/", locale, {
+      title: t("brand.ogTitle"),
+      description: t("brand.ogDescription"),
+    }),
     title: { absolute: title },
     description: t("brand.description", { name: BRAND.name }),
-    ...localeAlternates("/", locale),
   };
 }
 
