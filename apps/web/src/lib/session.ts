@@ -7,3 +7,7 @@ export async function signInWithAccessToken(accessToken: string) {
   });
   if (!result?.ok) throw new Error("session");
 }
+
+export function navigateAfterAuth(url: string) {
+  window.location.assign(url);
+}

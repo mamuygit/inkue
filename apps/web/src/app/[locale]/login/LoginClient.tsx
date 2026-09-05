@@ -4,31 +4,38 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { loginSchema } from "@mamuy/shared";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormField } from "@/components/FormField";
 import { LocaleLink } from "@/components/LocaleLink";
 import { PasswordField } from "@/components/PasswordField";
 import { ApiError, apiFetch } from "@/lib/api";
-import { signInWithAccessToken } from "@/lib/session";
+import { safeCallbackUrl } from "@/lib/callback-url";
+import { navigateAfterAuth, signInWithAccessToken } from "@/lib/session";
 import { translateApiError, translateMessage } from "@/i18n/errors";
 import { useI18n } from "@/i18n/LocaleProvider";
 import { localizedPath } from "@/i18n/path";
 
 export function LoginClient({ callbackUrl: callbackFromQuery }: { callbackUrl?: string }) {
   const { t, locale } = useI18n();
-  const router = useRouter();
-  const callbackUrl = callbackFromQuery || localizedPath("/dashboard", locale);
+  const { status } = useSession();
+  const callbackUrl = safeCallbackUrl(callbackFromQuery, localizedPath("/dashboard", locale));
   const [banner, setBanner] = useState<{ type: "error" | "info"; text: string } | null>(null);
   const dateLocale = locale === "th" ? "th-TH" : "en-US";
   const registerHref = `/register?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+
+  useEffect(() => {
+    if (status !== "authenticated") return;
+    window.location.replace(callbackUrl);
+  }, [status, callbackUrl]);
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -44,8 +51,7 @@ export function LoginClient({ callbackUrl: callbackFromQuery }: { callbackUrl?: 
       await signInWithAccessToken(data.accessToken);
     },
     onSuccess: () => {
-      router.refresh();
-      router.push(callbackUrl);
+      navigateAfterAuth(callbackUrl);
     },
     onError: (err) => {
       if (err instanceof ApiError) {
@@ -61,6 +67,14 @@ export function LoginClient({ callbackUrl: callbackFromQuery }: { callbackUrl?: 
       setBanner({ type: "error", text: t("login.sessionFailed") });
     },
   });
+
+  if (status === "authenticated") {
+    return (
+      <Container maxWidth="sm" sx={{ py: { xs: 6, md: 10 }, display: "flex", justifyContent: "center" }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="sm" sx={{ py: { xs: 6, md: 10 } }}>

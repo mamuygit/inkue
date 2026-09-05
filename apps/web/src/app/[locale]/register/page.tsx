@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import { BRAND } from "@mamuy/shared";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { RegisterClient } from "./RegisterClient";
 import { publicPageMetadata } from "@/i18n/metadata";
+import { localizedPath } from "@/i18n/path";
 import { getT, resolveLocale } from "@/i18n/server";
+import { authOptions } from "@/lib/auth";
+import { safeCallbackUrl } from "@/lib/callback-url";
+
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -21,7 +28,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function RegisterPage({ searchParams }: Props) {
+export default async function RegisterPage({ params, searchParams }: Props) {
+  const locale = await resolveLocale(params);
   const { callbackUrl } = await searchParams;
+  const session = await getServerSession(authOptions);
+  if (session) {
+    redirect(safeCallbackUrl(callbackUrl, localizedPath("/dashboard", locale)));
+  }
   return <RegisterClient callbackUrl={callbackUrl} />;
 }

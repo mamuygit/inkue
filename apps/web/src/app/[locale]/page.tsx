@@ -63,7 +63,7 @@ export default async function HomePage({ params }: Props) {
             {t("home.subtitle", { domain: BRAND.scanDomain })}
           </Typography>
           <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center" sx={{ mt: 4 }}>
-            <Button component={LocaleLink} href="/dashboard/qr/create" variant="contained" size="large">
+            <Button component={LocaleLink} href="/dashboard/qr/create" prefetch={false} variant="contained" size="large">
               {t("home.ctaCreate")}
             </Button>
             <Button

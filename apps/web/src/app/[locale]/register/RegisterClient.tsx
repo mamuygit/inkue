@@ -10,7 +10,6 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { OTP, registerSchema, otpVerifySchema } from "@mamuy/shared";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,7 +17,8 @@ import { FormField } from "@/components/FormField";
 import { LocaleLink } from "@/components/LocaleLink";
 import { PasswordField } from "@/components/PasswordField";
 import { ApiError, apiFetch } from "@/lib/api";
-import { signInWithAccessToken } from "@/lib/session";
+import { safeCallbackUrl } from "@/lib/callback-url";
+import { navigateAfterAuth, signInWithAccessToken } from "@/lib/session";
 import { translateApiError, translateMessage } from "@/i18n/errors";
 import { useI18n } from "@/i18n/LocaleProvider";
 import { localizedPath } from "@/i18n/path";
@@ -34,8 +34,7 @@ const registerFormSchema = registerSchema
 
 function RegisterForm({ callbackUrl: callbackFromQuery }: { callbackUrl?: string }) {
   const { t, locale } = useI18n();
-  const router = useRouter();
-  const callbackUrl = callbackFromQuery || localizedPath("/dashboard", locale);
+  const callbackUrl = safeCallbackUrl(callbackFromQuery, localizedPath("/dashboard", locale));
   const [step, setStep] = useState<"form" | "otp">("form");
   const [email, setEmail] = useState("");
   const [cooldown, setCooldown] = useState(0);
@@ -112,8 +111,7 @@ function RegisterForm({ callbackUrl: callbackFromQuery }: { callbackUrl?: string
       await signInWithAccessToken(data.accessToken);
     },
     onSuccess: () => {
-      router.refresh();
-      router.push(callbackUrl);
+      navigateAfterAuth(callbackUrl);
     },
     onError: (err) => showApiError(err, t("login.invalidCode")),
   });
