@@ -1,11 +1,11 @@
 export const en = {
   brand: {
-    tagline: "Free QR codes with logos — change the link anytime",
+    tagline: "Free QR Code Generator with Logo",
     description:
-      "{name} — free QR codes with your logo. Change the destination anytime without reprinting, and track every scan.",
-    ogTitle: "Inkue — Free QR codes with your logo",
+      "{name} at qr.mamuy.dev is a free QR code generator with logo. Generate a free QR code, change the destination anytime without reprinting, and track scans. No ads.",
+    ogTitle: "Inkue — Free QR Code Generator with Logo",
     ogDescription:
-      "Create free QR codes with your logo. Change the destination anytime without reprinting, and track every scan.",
+      "Generate free QR codes with your logo on Inkue. Change the link anytime without reprinting, and track every scan at qr.mamuy.dev.",
   },
   nav: {
     faq: "FAQ",
@@ -31,9 +31,9 @@ export const en = {
     label: "Language",
   },
   home: {
-    headline: "Free QR Code Generator",
+    headline: "Inkue — Free QR Code Generator",
     aioSummary:
-      "Inkue at qr.mamuy.dev is a free QR code generator: add your logo, change the destination anytime without reprinting, and track scans. No ads, no paywall. Made in Thailand.",
+      "Inkue at qr.mamuy.dev is a free QR code generator with logo: generate a free QR code, change the destination anytime without reprinting, and track scans. No ads, no paywall. Made in Thailand.",
     subtitle:
       "Scans go through {domain} first, then to your destination — update the URL without reprinting the QR.",
     ctaCreate: "Create a free QR",
@@ -41,21 +41,36 @@ export const en = {
     odometerTitle: "QR codes created on {name}",
     odometerCaption: "Always at least 7 digits, based on the real count",
     odometerAria: "{count} QR codes created",
-    featureLogo: "Your logo",
-    featureLogoBody: "Drop your brand mark onto the QR. High error correction keeps it scannable.",
-    featureLink: "Change the link",
-    featureLinkBody: "The printed code stays the same. Update the destination URL whenever you need.",
-    featureScans: "See scans",
-    featureScansBody: "See how often each code is scanned after people use it in the real world.",
+    howTitle: "How the Inkue QR code generator works",
+    featureLogo: "Generate a free QR code with your logo",
+    featureLogoBody: "Drop your brand mark onto the QR. High error correction keeps an Inkue QR scannable.",
+    featureLink: "Change the link anytime (dynamic QR)",
+    featureLinkBody: "The printed code stays the same. Edit the destination URL whenever you need — no reprinting.",
+    featureScans: "Track every scan",
+    featureScansBody: "See how often each Inkue QR code is scanned after people use it in the real world.",
+    useCasesTitle: "Use Inkue QR codes for print",
+    useCasesBody:
+      "Create a free dynamic QR for a restaurant menu, LINE Official Account, Instagram, or a name card. The Inkue QR stays the same if you later change the link.",
+    useCaseMenu: "Restaurant menus",
+    useCaseLine: "LINE Official Account",
+    useCaseSocial: "Instagram and social profiles",
+    useCaseCard: "Name cards and posters",
   },
   footer: {
     copy: "Free to use, never required to pay",
   },
   faq: {
-    title: "FAQ",
-    description: "How to use {name}, a free QR code generator, to add a logo, change the link, and track scans",
+    title: "Inkue FAQ",
+    description:
+      "What Inkue is, how to generate a free QR code with a logo, change the QR link, and track scans at qr.mamuy.dev",
+    qWhat: "What is Inkue?",
+    aWhat:
+      "Inkue is a free QR code generator at qr.mamuy.dev. Create an Inkue QR code with your logo, change the destination later, and track scans. No ads and no required payment.",
+    qGenerate: "How do I generate a free QR code on Inkue?",
+    aGenerate:
+      "Open Inkue, create an account, then paste a destination URL. Add a logo if you want, download the QR, and print it. You can edit the destination later without reprinting.",
     q1: "Is it really free?",
-    a1: "Yes. Create QR codes at no cost, with no paywall. If you'd like to support the team, you can Donate via PayPal.",
+    a1: "Yes. Generate free QR codes on Inkue at no cost, with no paywall. If you'd like to support the team, you can Donate via PayPal.",
     q2: "Why doesn't a scan go straight to my site?",
     a2: "Every QR encodes {domain}/{hash} so you can change the destination later, and so we can record the scan before redirecting.",
     q3: "Will it still scan with a logo?",

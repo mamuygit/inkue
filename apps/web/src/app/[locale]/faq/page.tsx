@@ -11,16 +11,21 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = await resolveLocale(params);
   const { t } = await getT(locale);
-  return publicPageMetadata("/faq", locale, {
-    title: t("faq.title"),
-    description: t("faq.description", { name: BRAND.name }),
-  });
+  return {
+    ...publicPageMetadata("/faq", locale, {
+      title: t("faq.title"),
+      description: t("faq.description", { name: BRAND.name }),
+    }),
+    title: { absolute: t("faq.title") },
+  };
 }
 
 export default async function FaqPage({ params }: Props) {
   const locale = await resolveLocale(params);
   const { t } = await getT(locale);
   const faqs = [
+    { q: t("faq.qWhat"), a: t("faq.aWhat") },
+    { q: t("faq.qGenerate"), a: t("faq.aGenerate") },
     { q: t("faq.q1"), a: t("faq.a1") },
     { q: t("faq.q2"), a: t("faq.a2", { domain: BRAND.scanDomain }) },
     { q: t("faq.q3"), a: t("faq.a3") },

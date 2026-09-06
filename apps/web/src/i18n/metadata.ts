@@ -15,7 +15,7 @@ export const OG_IMAGE = {
   secureUrl: `${assetUrl("/og.png")}?v=${OG_VERSION}`,
   width: 1200,
   height: 630,
-  alt: `${BRAND.name} logo — free QR codes with your logo`,
+  alt: `${BRAND.name} — Free QR Code Generator with Logo`,
   type: "image/png",
 } as const;
 

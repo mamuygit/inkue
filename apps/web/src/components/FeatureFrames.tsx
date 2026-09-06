@@ -1,7 +1,6 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
@@ -16,7 +15,10 @@ const FEATURES = [
 export function FeatureFrames() {
   const { t } = useI18n();
   return (
-    <Container maxWidth="lg" sx={{ pb: 10 }}>
+    <Container maxWidth="lg" sx={{ pb: 10 }} component="section">
+      <Typography component="h2" variant="h5" textAlign="center" fontWeight={800} sx={{ mb: 4 }}>
+        {t("home.howTitle")}
+      </Typography>
       <Box
         sx={{
           display: "grid",
@@ -27,6 +29,7 @@ export function FeatureFrames() {
         {FEATURES.map((item) => (
           <Box
             key={item.src}
+            component="article"
             sx={{
               overflow: "hidden",
               borderRadius: 5,
@@ -41,39 +44,25 @@ export function FeatureFrames() {
               },
             }}
           >
-            <Box sx={{ position: "relative" }}>
-              <Box
-                component="img"
-                src={item.src}
-                alt={t(item.key)}
-                sx={{
-                  width: "100%",
-                  aspectRatio: "1 / 1",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
-              <Chip
-                label={t(item.key)}
-                sx={{
-                  position: "absolute",
-                  left: "50%",
-                  bottom: 16,
-                  transform: "translateX(-50%)",
-                  height: 36,
-                  px: 1,
-                  fontWeight: 700,
-                  bgcolor: "#fff",
-                  color: "text.primary",
-                  backdropFilter: "blur(8px)",
-                  boxShadow: "0 10px 24px rgba(15, 23, 42, 0.12)",
-                  "& .MuiChip-label": { px: 1.5 },
-                }}
-              />
+            <Box
+              component="img"
+              src={item.src}
+              alt={t(item.key)}
+              sx={{
+                width: "100%",
+                aspectRatio: "1 / 1",
+                objectFit: "cover",
+                display: "block",
+              }}
+            />
+            <Box sx={{ px: 2.5, py: 2.5 }}>
+              <Typography component="h3" variant="subtitle1" fontWeight={800} sx={{ lineHeight: 1.35 }}>
+                {t(item.key)}
+              </Typography>
+              <Typography color="text.secondary" sx={{ mt: 1, fontSize: 15, lineHeight: 1.5 }}>
+                {t(item.body)}
+              </Typography>
             </Box>
-            <Typography color="text.secondary" sx={{ px: 2.5, py: 2, fontSize: 15, lineHeight: 1.5 }}>
-              {t(item.body)}
-            </Typography>
           </Box>
         ))}
       </Box>

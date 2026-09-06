@@ -88,6 +88,50 @@ export default async function HomePage({ params }: Props) {
       </Container>
 
       <FeatureFrames />
+
+      <Container maxWidth="md" sx={{ pb: 10 }} component="section">
+        <Typography component="h2" variant="h5" textAlign="center" fontWeight={800} sx={{ mb: 2 }}>
+          {t("home.useCasesTitle")}
+        </Typography>
+        <Typography textAlign="center" color="text.secondary" sx={{ mb: 3, fontSize: 17, lineHeight: 1.6 }}>
+          {t("home.useCasesBody")}
+        </Typography>
+        <Box
+          component="ul"
+          sx={{
+            m: 0,
+            px: 0,
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+            gap: 1.5,
+            listStyle: "none",
+          }}
+        >
+          {[
+            t("home.useCaseMenu"),
+            t("home.useCaseLine"),
+            t("home.useCaseSocial"),
+            t("home.useCaseCard"),
+          ].map((label) => (
+            <Box
+              key={label}
+              component="li"
+              sx={{
+                px: 2,
+                py: 1.5,
+                borderRadius: 2,
+                bgcolor: "#fff",
+                border: "1px solid",
+                borderColor: "rgba(37, 99, 235, 0.14)",
+                fontWeight: 700,
+                textAlign: "center",
+              }}
+            >
+              {label}
+            </Box>
+          ))}
+        </Box>
+      </Container>
     </>
   );
 }

@@ -1,6 +1,6 @@
 export const BRAND = {
   name: "Inkue",
-  tagline: "Free QR codes with logos — change the link anytime",
+  tagline: "Free QR Code Generator with Logo",
   domain: "qr.mamuy.dev",
   scanDomain: "q.mamuy.dev",
   donateUrl: "https://www.paypal.com/paypalme/mamuydev",

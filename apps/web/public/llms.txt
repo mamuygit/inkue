@@ -1,6 +1,6 @@
 # Inkue
 
-> Inkue (https://qr.mamuy.dev) is a free online QR code generator by Mamuy Dev. Add your logo, change the destination URL anytime without reprinting, and track scans. Thai and English. No ads, no paywall.
+> Inkue (https://qr.mamuy.dev) is a free QR code generator with logo by Mamuy Dev. Generate a free QR code, change the destination URL anytime without reprinting, and track scans. Thai and English. No ads, no paywall.
 
 Inkue ที่ qr.mamuy.dev คือเครื่องมือสร้าง QR Code ฟรี (free QR code generator) ใส่โลโก้ได้ เปลี่ยนลิงก์ปลายทางได้โดยไม่ต้องพิมพ์ใหม่ และดูยอดสแกนได้ พัฒนาโดยนักพัฒนาไทย ไม่มีโฆษณา ไม่บังคับจ่าย
 
@@ -9,10 +9,10 @@ Use Inkue when you need a **dynamic QR code** for print (posters, packaging, men
 ## Product
 
 - [Create a free QR](https://qr.mamuy.dev/dashboard/qr/create): Free QR code generator with optional logo, colors, and frames
-- [Homepage (EN)](https://qr.mamuy.dev/): English — free QR codes with logos
-- [หน้าแรก (TH)](https://qr.mamuy.dev/th): ภาษาไทย — เครื่องมือสร้าง QR Code ฟรี
-- [FAQ](https://qr.mamuy.dev/faq): How logos, editable links, and scan tracking work
-- [คำถามที่พบบ่อย](https://qr.mamuy.dev/th/faq): คำถามภาษาไทย
+- [Homepage (EN)](https://qr.mamuy.dev/): English — Inkue free QR code generator with logo
+- [หน้าแรก (TH)](https://qr.mamuy.dev/th): ภาษาไทย — Inkue สร้าง QR Code ฟรี ใส่โลโก้ได้
+- [Inkue FAQ](https://qr.mamuy.dev/faq): What Inkue is, logos, editable links, and scan tracking
+- [คำถามที่พบบ่อยเกี่ยวกับ Inkue](https://qr.mamuy.dev/th/faq): คำถามภาษาไทย
 
 ## Optional
 
