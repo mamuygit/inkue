@@ -94,8 +94,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       google: "zLj3F4ZvVBOWSMEDWDvxCF1srWh0mQ9N81k094zHC5c",
     },
     icons: {
-      icon: [{ url: "/favicon.svg?v=a", type: "image/svg+xml" }, { url: "/logo.png?v=a" }],
-      apple: "/apple-touch-icon.png?v=a",
+      icon: [
+        { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+        { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+        { url: "/logo.png", sizes: "256x256", type: "image/png" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
     },
   };
 }
@@ -154,6 +160,12 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <html lang={locale} className={`${inter.variable} ${notoThai.variable}`} suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="48x48" type="image/x-icon" />
+        <link rel="icon" href="/favicon-48x48.png" sizes="48x48" type="image/png" />
+        <link rel="icon" href="/logo.png" sizes="256x256" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+      </head>
       <body className={locale === "th" ? notoThai.className : inter.className}>
         <GoogleAnalytics />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

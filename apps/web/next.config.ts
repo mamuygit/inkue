@@ -27,6 +27,14 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: "/favicon.ico",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400" }],
+      },
+      {
+        source: "/favicon-48x48.png",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400" }],
+      },
+      {
         source: "/llms.txt",
         headers: [{ key: "Content-Type", value: "text/plain; charset=utf-8" }],
       },
