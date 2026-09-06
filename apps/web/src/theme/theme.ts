@@ -16,8 +16,8 @@ export function createAppTheme(locale: Locale) {
   typography: {
     fontFamily:
       locale === "th"
-        ? "var(--font-sans-th), var(--font-sans-en), system-ui, sans-serif"
-        : "var(--font-sans-en), var(--font-sans-th), system-ui, sans-serif",
+        ? "var(--font-sans-th), system-ui, sans-serif"
+        : "var(--font-sans-en), system-ui, sans-serif",
     h1: { fontWeight: 700, letterSpacing: "-0.03em" },
     h2: { fontWeight: 700, letterSpacing: "-0.02em" },
     h3: { fontWeight: 700 },

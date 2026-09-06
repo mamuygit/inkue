@@ -35,6 +35,14 @@ const nextConfig: NextConfig = {
         headers: [{ key: "Cache-Control", value: "public, max-age=86400" }],
       },
       {
+        source: "/features/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=604800" }],
+      },
+      {
+        source: "/logo.svg",
+        headers: [{ key: "Cache-Control", value: "public, max-age=604800" }],
+      },
+      {
         source: "/llms.txt",
         headers: [{ key: "Content-Type", value: "text/plain; charset=utf-8" }],
       },

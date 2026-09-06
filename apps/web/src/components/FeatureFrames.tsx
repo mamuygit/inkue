@@ -7,9 +7,9 @@ import Typography from "@mui/material/Typography";
 import { useI18n } from "@/i18n/LocaleProvider";
 
 const FEATURES = [
-  { key: "home.featureLogo", body: "home.featureLogoBody", src: "/features/logo.jpg" },
-  { key: "home.featureLink", body: "home.featureLinkBody", src: "/features/link.jpg" },
-  { key: "home.featureScans", body: "home.featureScansBody", src: "/features/scans.jpg" },
+  { key: "home.featureLogo", body: "home.featureLogoBody", src: "/features/logo.webp" },
+  { key: "home.featureLink", body: "home.featureLinkBody", src: "/features/link.webp" },
+  { key: "home.featureScans", body: "home.featureScansBody", src: "/features/scans.webp" },
 ] as const;
 
 export function FeatureFrames() {
@@ -48,8 +48,13 @@ export function FeatureFrames() {
               component="img"
               src={item.src}
               alt={t(item.key)}
+              width={800}
+              height={800}
+              loading="lazy"
+              decoding="async"
               sx={{
                 width: "100%",
+                height: "auto",
                 aspectRatio: "1 / 1",
                 objectFit: "cover",
                 display: "block",

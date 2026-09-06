@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Noto_Sans_Thai } from "next/font/google";
 import { BRAND } from "@mamuy/shared";
 import { notFound } from "next/navigation";
-import { getServerSession } from "next-auth";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { Providers } from "@/components/Providers";
 import { SiteShell } from "@/components/SiteShell";
@@ -10,19 +9,21 @@ import { LOCALES, isLocale } from "@/i18n/config";
 import { OG_IMAGE } from "@/i18n/metadata";
 import { resolveLocale } from "@/i18n/server";
 import { getMessages, createTranslator } from "@/i18n/translate";
-import { authOptions } from "@/lib/auth";
+import { getOptionalSession } from "@/lib/auth";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans-en",
   display: "swap",
+  preload: false,
 });
 
 const notoThai = Noto_Sans_Thai({
-  subsets: ["thai", "latin"],
-  weight: ["400", "500", "600", "700"],
+  subsets: ["thai"],
+  weight: ["400", "700"],
   variable: "--font-sans-th",
   display: "swap",
+  preload: false,
 });
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://qr.mamuy.dev";
@@ -110,7 +111,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function LocaleLayout({ children, params }: Props) {
   const locale = await resolveLocale(params);
-  const session = await getServerSession(authOptions);
+  const session = await getOptionalSession();
   const t = createTranslator(getMessages(locale));
   const jsonLd = {
     "@context": "https://schema.org",
@@ -161,7 +162,11 @@ export default async function LocaleLayout({ children, params }: Props) {
   };
 
   return (
-    <html lang={locale} className={`${inter.variable} ${notoThai.variable}`} suppressHydrationWarning>
+    <html
+      lang={locale}
+      className={locale === "th" ? notoThai.variable : inter.variable}
+      suppressHydrationWarning
+    >
       <head>
         <link rel="icon" href="/favicon.ico" sizes="48x48" type="image/x-icon" />
         <link rel="icon" href="/favicon-48x48.png" sizes="48x48" type="image/png" />

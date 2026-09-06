@@ -1,5 +1,7 @@
 import type { NextAuthOptions, User } from "next-auth";
+import { getServerSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 
 const prefix = process.env.AUTH_COOKIE_PREFIX ?? "mamuy-qr";
@@ -62,3 +64,17 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+export async function getOptionalSession() {
+  const prefix = process.env.AUTH_COOKIE_PREFIX ?? "mamuy-qr";
+  const base = `${prefix}.session-token`;
+  const jar = await cookies();
+  const hasToken = Boolean(
+    jar.get(base)?.value ||
+      jar.get(`${base}.0`)?.value ||
+      jar.get(`__Secure-${base}`)?.value ||
+      jar.get(`__Secure-${base}.0`)?.value,
+  );
+  if (!hasToken) return null;
+  return getServerSession(authOptions);
+}
