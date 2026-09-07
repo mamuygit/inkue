@@ -12,6 +12,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import { usePathname } from "next/navigation";
 import { useDashboardMenu } from "./DashboardMenuContext";
 import { LangSwitch } from "./LangSwitch";
@@ -44,6 +45,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const dashboardActive = isDashboardHome(inner);
   const foldersActive = isFoldersPage(inner);
   const createActive = isCreateQrPage(inner);
+  const versionLabel = t("menu.version", { version: process.env.NEXT_PUBLIC_APP_VERSION ?? "0.0.1" });
+
+  const version = (
+    <Typography variant="caption" color="text.secondary" sx={{ display: "block", px: 2, py: 1.5 }}>
+      {versionLabel}
+    </Typography>
+  );
 
   const nav = (
     <Box sx={{ width: DRAWER_WIDTH }} onClick={() => setOpen(false)}>
@@ -107,6 +115,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         {nav}
         <Box sx={{ px: 2, pb: 2, mt: "auto" }}>
           <LangSwitch />
+          <Typography variant="caption" color="text.secondary" sx={{ display: "block", pt: 1.5 }}>
+            {versionLabel}
+          </Typography>
         </Box>
       </Drawer>
       <Drawer
@@ -119,13 +130,17 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             width: DRAWER_WIDTH,
             boxSizing: "border-box",
             position: "relative",
+            height: "100%",
             borderRight: "1px solid",
             borderColor: "divider",
+            display: "flex",
+            flexDirection: "column",
           },
         }}
         open
       >
         {nav}
+        <Box sx={{ mt: "auto" }}>{version}</Box>
       </Drawer>
       <Box sx={{ flex: 1, minWidth: 0 }}>{children}</Box>
     </Box>

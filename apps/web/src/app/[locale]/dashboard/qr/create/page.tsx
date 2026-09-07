@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { QrEditor } from "@/components/QrEditor";
 import { getT, resolveLocale } from "@/i18n/server";
 
-type Props = { params: Promise<{ locale: string }> };
+type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ folder?: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = await resolveLocale(params);
@@ -15,15 +15,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function CreateQrPage({ params }: Props) {
+export default async function CreateQrPage({ params, searchParams }: Props) {
   const locale = await resolveLocale(params);
+  const { folder } = await searchParams;
   const { t } = await getT(locale);
+  const initialFolderId = folder === "unfiled" ? null : folder || undefined;
   return (
     <Container maxWidth="lg" sx={{ py: 5 }}>
       <Typography component="h1" variant="h4" fontWeight={800} sx={{ mb: 3 }}>
         {t("dashboard.createNew")}
       </Typography>
-      <QrEditor />
+      <QrEditor initialFolderId={initialFolderId} />
     </Container>
   );
 }

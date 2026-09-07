@@ -1,10 +1,16 @@
 import type { NextConfig } from "next";
 import { loadEnvConfig } from "@next/env";
+import { readFileSync } from "fs";
 import { resolve } from "path";
 
 loadEnvConfig(resolve(__dirname, "../.."));
 
+const pkgVersion = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8")).version as string;
+
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION ?? pkgVersion,
+  },
   output: "standalone",
   transpilePackages: ["@mamuy/shared"],
   async rewrites() {

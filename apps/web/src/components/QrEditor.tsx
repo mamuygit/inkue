@@ -80,7 +80,7 @@ function isAllowedLogo(file: File) {
 
 type FormValues = QrCreateInput;
 
-export function QrEditor({ existing }: { existing?: QrRecord }) {
+export function QrEditor({ existing, initialFolderId }: { existing?: QrRecord; initialFolderId?: string | null }) {
   const { t, locale } = useI18n();
   const { data: session } = useSession();
   const token = session?.accessToken;
@@ -103,7 +103,7 @@ export function QrEditor({ existing }: { existing?: QrRecord }) {
       frameShape: existing?.frameShape ?? "rounded_square",
       frameBgColor: existing?.frameBgColor ?? "#000000",
       logoKey: existing?.logoKey ?? undefined,
-      folderId: existing?.folderId ?? null,
+      folderId: existing?.folderId ?? (initialFolderId !== undefined ? initialFolderId : null),
     },
   });
 
