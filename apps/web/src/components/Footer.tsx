@@ -1,14 +1,13 @@
 "use client";
 
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { BRAND } from "@mamuy/shared";
 import { BrandMark } from "./BrandMark";
+import { DonateButton } from "./DonateButton";
 import { LangSwitch } from "./LangSwitch";
 import { LocaleLink } from "./LocaleLink";
 import { useI18n } from "@/i18n/LocaleProvider";
@@ -32,24 +31,7 @@ export function Footer() {
             <Link component={LocaleLink} href="/terms" underline="hover" color="text.secondary">
               {t("nav.terms")}
             </Link>
-            <Chip
-              component="a"
-              href={BRAND.donateUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              clickable
-              icon={<FavoriteBorderIcon />}
-              label={t("nav.donate")}
-              sx={{
-                height: 36,
-                px: 0.5,
-                fontWeight: 700,
-                color: "#fff",
-                bgcolor: "primary.main",
-                "& .MuiChip-icon": { color: "#fff" },
-                "&:hover": { bgcolor: "primary.dark" },
-              }}
-            />
+            <DonateButton variant="footer" />
           </Stack>
         </Stack>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>

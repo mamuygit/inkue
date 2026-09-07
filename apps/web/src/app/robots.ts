@@ -39,7 +39,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/dashboard", "/th/dashboard", "/api", "/r/"],
+        disallow: ["/dashboard", "/th/dashboard", "/admin", "/th/admin", "/api", "/r/"],
       },
     ],
     sitemap: `${appUrl}/sitemap.xml`,

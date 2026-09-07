@@ -10,6 +10,7 @@ import {
 import { createId } from "../../common/id";
 import { QrCode } from "./qr-code.entity";
 import { Folder } from "./folder.entity";
+import { DonateClick } from "./donate-click.entity";
 
 @Entity({ name: "User" })
 export class User {
@@ -39,6 +40,9 @@ export class User {
 
   @OneToMany(() => Folder, (folder) => folder.user)
   folders: Folder[];
+
+  @OneToMany(() => DonateClick, (click) => click.user)
+  donateClicks: DonateClick[];
 
   @BeforeInsert()
   assignId() {

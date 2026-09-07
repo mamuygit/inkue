@@ -1,6 +1,5 @@
 "use client";
 
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -15,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { BrandMark } from "./BrandMark";
 import { useDashboardMenu } from "./DashboardMenuContext";
+import { DonateButton } from "./DonateButton";
 import { LangSwitch } from "./LangSwitch";
 import { LocaleLink } from "./LocaleLink";
 import { UserMenu } from "./UserMenu";
@@ -40,7 +40,8 @@ export function Header() {
   const { data: session, status } = useSession();
   const { t } = useI18n();
   const menu = useDashboardMenu();
-  const inApp = stripLocalePrefix(usePathname()).startsWith("/dashboard");
+  const inner = stripLocalePrefix(usePathname());
+  const inApp = inner.startsWith("/dashboard") || inner.startsWith("/admin");
   const showHamburger = Boolean(inApp && menu);
 
   const toolbar = (
@@ -88,16 +89,7 @@ export function Header() {
             gap: { sm: 0.5, md: 1 },
           }}
         >
-          <Button
-            component="a"
-            href={BRAND.donateUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            color="inherit"
-            startIcon={<FavoriteBorderIcon />}
-          >
-            {t("nav.donate")}
-          </Button>
+          <DonateButton />
           <Box sx={{ mx: 0.5 }}>
             <LangSwitch />
           </Box>

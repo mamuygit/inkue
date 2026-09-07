@@ -5,7 +5,7 @@ import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { COLORS } from "@mamuy/shared";
+import { CHART } from "@mamuy/shared";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { ScanAreaChart } from "@/components/ScanAreaChart";
 import { ScanBreakdownCharts } from "@/components/ScanBreakdownCharts";
@@ -119,7 +119,7 @@ export default function DashboardPage() {
             layout="horizontal"
             height={Math.max(240, barValues.length * 40)}
             yAxis={[{ scaleType: "band", data: barLabels }]}
-            series={[{ data: barValues, label: t("dashboard.scans"), color: COLORS.accent }]}
+            series={[{ data: barValues, label: t("dashboard.scans"), color: CHART.bar }]}
             margin={{ left: 120, right: 16 }}
           />
         ) : (

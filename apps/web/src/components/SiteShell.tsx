@@ -9,7 +9,8 @@ import { stripLocalePrefix } from "@/i18n/path";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isApp = stripLocalePrefix(pathname).startsWith("/dashboard");
+  const inner = stripLocalePrefix(pathname);
+  const isApp = inner.startsWith("/dashboard") || inner.startsWith("/admin");
 
   return (
     <DashboardMenuProvider>

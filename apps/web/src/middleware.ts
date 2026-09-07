@@ -61,7 +61,7 @@ export function middleware(req: NextRequest) {
   const locale: Locale = localeFromPathname(pathname);
   const inner = stripLocalePrefix(pathname);
 
-  if (inner.startsWith("/dashboard") && !hasSessionToken(req)) {
+  if ((inner.startsWith("/dashboard") || inner.startsWith("/admin")) && !hasSessionToken(req)) {
     // Prefetching a protected route while logged out must not cache a login
     // redirect — Next.js would reuse it after sign-in (e.g. "+ Create QR").
     if (isPrefetch(req)) {

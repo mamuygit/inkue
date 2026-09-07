@@ -3,13 +3,13 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { COLORS } from "@mamuy/shared";
+import { CHART } from "@mamuy/shared";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useI18n } from "@/i18n/LocaleProvider";
 
 export type BreakdownRow = { label: string; count: number };
 
-const DEVICE_KEYS = new Set(["mobile", "tablet", "desktop", "unknown", "direct"]);
+const DEVICE_KEYS = new Set(["mobile", "tablet", "desktop", "unknown", "direct", "anonymous"]);
 
 export function ScanBreakdownCharts({
   byReferrer,
@@ -35,7 +35,7 @@ export function ScanBreakdownCharts({
           layout="horizontal"
           height={Math.max(200, rows.length * 40)}
           yAxis={[{ scaleType: "band", data: rows.map((row) => labelOf(row.label)) }]}
-          series={[{ data: rows.map((row) => row.count), label: t("dashboard.scans"), color: COLORS.accent }]}
+          series={[{ data: rows.map((row) => row.count), label: t("dashboard.scans"), color: CHART.bar }]}
           margin={{ left: 120, right: 16 }}
         />
       ) : (

@@ -9,6 +9,8 @@ import { QrModule } from "./qr/qr.module";
 import { FolderModule } from "./folders/folder.module";
 import { StatsModule } from "./stats/stats.module";
 import { RedirectModule } from "./redirect/redirect.module";
+import { DonateModule } from "./donate/donate.module";
+import { AdminModule } from "./admin/admin.module";
 import { HealthController } from "./health.controller";
 
 @Module({
@@ -29,6 +31,8 @@ import { HealthController } from "./health.controller";
     FolderModule,
     StatsModule,
     RedirectModule,
+    DonateModule,
+    AdminModule,
   ],
   controllers: [HealthController],
 })

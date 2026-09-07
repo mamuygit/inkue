@@ -3,6 +3,8 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  Logger,
+  OnModuleInit,
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
@@ -24,11 +26,14 @@ import { OtpChallenge, OtpDailyLimit, User } from "../db/entities";
 import { MailService } from "../mail/mail.service";
 import { parseDto } from "../common/parse-dto";
 import { hashPassword, verifyPassword } from "../common/password";
+import { isSuperadminEmail, superadminEmail, superadminPassword } from "../common/superadmin";
 import { bangkokDate, clientIp, hashValue, nextBangkokMidnight, verifyHash } from "../common/util";
 import { Request } from "express";
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnModuleInit {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     @InjectRepository(User) private users: Repository<User>,
     @InjectRepository(OtpChallenge) private challenges: Repository<OtpChallenge>,
@@ -36,6 +41,51 @@ export class AuthService {
     private mail: MailService,
     private jwt: JwtService,
   ) {}
+
+  async onModuleInit() {
+    await this.seedSuperadmin();
+  }
+
+  private async seedSuperadmin() {
+    const email = superadminEmail();
+    const password = superadminPassword();
+    if (!email || !password) return;
+
+    let user = await this.users
+      .createQueryBuilder("user")
+      .where("LOWER(user.email) = :email", { email })
+      .getOne();
+
+    const matches = user?.passwordHash ? await verifyPassword(password, user.passwordHash) : false;
+
+    if (!user) {
+      await this.users.save(
+        this.users.create({
+          email,
+          passwordHash: await hashPassword(password),
+          emailVerifiedAt: new Date(),
+        }),
+      );
+      this.logger.log("Seeded superadmin account");
+      return;
+    }
+
+    let dirty = false;
+    if (!matches) {
+      user.passwordHash = await hashPassword(password);
+      dirty = true;
+    }
+    if (!user.emailVerifiedAt) {
+      user.emailVerifiedAt = new Date();
+      dirty = true;
+    }
+    if (user.email !== email) {
+      user.email = email;
+      dirty = true;
+    }
+    if (dirty) await this.users.save(user);
+    this.logger.log("Superadmin account ready");
+  }
 
   private pepper() {
     return process.env.NEXTAUTH_SECRET ?? "";
@@ -309,7 +359,7 @@ export class AuthService {
   async me(userId: string) {
     const user = await this.users.findOne({ where: { id: userId } });
     if (!user) throw new UnauthorizedException();
-    return { id: user.id, email: user.email };
+    return { id: user.id, email: user.email, isAdmin: isSuperadminEmail(user.email) };
   }
 
   async requestPasswordReset(raw: unknown, req: Request) {

@@ -3,6 +3,8 @@ export function getApiUrl() {
   const trimmed = configured.replace(/\/$/, "");
   if (trimmed.startsWith("http")) return trimmed;
   if (typeof window === "undefined") {
+    const internal = (process.env.API_INTERNAL_URL ?? "").replace(/\/$/, "");
+    if (internal) return `${internal}${trimmed.startsWith("/") ? trimmed : `/${trimmed}`}`;
     const origin = (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
     return `${origin}${trimmed.startsWith("/") ? trimmed : `/${trimmed}`}`;
   }

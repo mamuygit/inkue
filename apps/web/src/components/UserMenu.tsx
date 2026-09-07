@@ -1,5 +1,6 @@
 "use client";
 
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import QrCode2Icon from "@mui/icons-material/QrCode2";
@@ -11,11 +12,13 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
-import { signOut } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useI18n } from "@/i18n/LocaleProvider";
 import { localizedPath } from "@/i18n/path";
+import { apiFetch } from "@/lib/api";
 
 function initialFromEmail(email: string) {
   const letter = email.trim().charAt(0);
@@ -25,8 +28,15 @@ function initialFromEmail(email: string) {
 export function UserMenu({ email }: { email: string }) {
   const { t, locale } = useI18n();
   const router = useRouter();
+  const { data: session } = useSession();
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const open = Boolean(anchor);
+  const me = useQuery({
+    queryKey: ["auth-me"],
+    enabled: Boolean(session?.accessToken),
+    queryFn: () => apiFetch<{ isAdmin: boolean }>("/auth/me", { token: session?.accessToken }),
+    staleTime: 60_000,
+  });
 
   function go(path: string) {
     setAnchor(null);
@@ -90,6 +100,14 @@ export function UserMenu({ email }: { email: string }) {
           </ListItemIcon>
           {t("menu.manageQr")}
         </MenuItem>
+        {me.data?.isAdmin ? (
+          <MenuItem onClick={() => go("/admin")}>
+            <ListItemIcon>
+              <AdminPanelSettingsOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            {t("nav.adminPanel")}
+          </MenuItem>
+        ) : null}
         <Divider />
         <MenuItem onClick={() => signOut({ callbackUrl: localizedPath("/", locale) })}>
           <ListItemIcon>

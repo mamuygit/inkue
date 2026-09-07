@@ -35,6 +35,7 @@ const MESSAGE_MAP: Record<string, MessageKey> = {
   "Uploaded logo not found": "errors.logoMissing",
   "Couldn't read that logo. Try a PNG or JPG instead.": "errors.logoUnreadable",
   "QR not found": "errors.qrNotFound",
+  "User not found": "errors.userNotFound",
   "Link not found": "errors.linkNotFound",
   "Invalid data": "errors.invalidData",
 };

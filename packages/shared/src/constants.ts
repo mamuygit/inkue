@@ -19,6 +19,19 @@ export const COLORS = {
   frameDefault: "#000000",
 } as const;
 
+/** Categorical palette for MUI X charts — stays in the Inkue family without neon cyan/pink. */
+export const CHART = {
+  scans: "#3B82F6",
+  qr: "#0D9488",
+  users: "#7C3AED",
+  donate: "#EA580C",
+  used: "#3B82F6",
+  unused: "#94A3B8",
+  signedIn: "#4F46E5",
+  anonymous: "#A78BFA",
+  bar: "#4F46E5",
+} as const;
+
 export const OTP = {
   length: 6,
   ttlMinutes: 10,
