@@ -38,11 +38,6 @@ export function createAppTheme(locale: Locale) {
         root: { backgroundColor: "#FFFFFF" },
       },
     },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: { backgroundColor: "#fff" },
-      },
-    },
     MuiPaper: {
       styleOverrides: { root: { backgroundImage: "none" } },
     },
