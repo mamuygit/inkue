@@ -17,6 +17,7 @@ import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { DateRangeFilter } from "@/components/DateRangeFilter";
+import { PageLoading } from "@/components/PageLoading";
 import { QrEditor, type QrRecord } from "@/components/QrEditor";
 import { apiFetch } from "@/lib/api";
 import { rangeFromPreset, statsQuery } from "@/lib/date-range";
@@ -66,11 +67,7 @@ export default function EditQrPage() {
   });
 
   if (qr.isLoading) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 5 }}>
-        <Typography>{t("dashboard.loading")}</Typography>
-      </Container>
-    );
+    return <PageLoading />;
   }
 
   if (!qr.data) {

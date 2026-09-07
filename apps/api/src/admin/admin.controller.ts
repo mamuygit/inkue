@@ -1,6 +1,7 @@
-import { Controller, Get, Param, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Query, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/jwt.guard";
 import { AdminGuard } from "../auth/admin.guard";
+import { AuthUser, CurrentUser } from "../auth/current-user.decorator";
 import { AdminService } from "./admin.service";
 
 @Controller("admin")
@@ -25,6 +26,11 @@ export class AdminController {
   @Get("users/:id")
   user(@Param("id") id: string) {
     return this.admin.getUser(id);
+  }
+
+  @Patch("users/:id/status")
+  setUserStatus(@Param("id") id: string, @Body() body: unknown, @CurrentUser() actor: AuthUser) {
+    return this.admin.setUserStatus(id, body, actor);
   }
 
   @Get("qr")

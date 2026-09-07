@@ -45,6 +45,19 @@ export const passwordResetSchema = z.object({
   password: passwordSchema,
 });
 
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Please enter your password"),
+  password: passwordSchema,
+});
+
+export const deleteAccountSchema = z.object({
+  password: z.string().min(1, "Please enter your password"),
+});
+
+export const adminUserStatusSchema = z.object({
+  active: z.boolean(),
+});
+
 export const logoPositionSchema = z.enum(LOGO_POSITIONS);
 export const frameShapeSchema = z.enum(FRAME_SHAPES);
 
@@ -114,6 +127,9 @@ export type OtpRequestInput = z.infer<typeof otpRequestSchema>;
 export type OtpVerifyInput = z.infer<typeof otpVerifySchema>;
 export type PasswordResetRequestInput = z.infer<typeof passwordResetRequestSchema>;
 export type PasswordResetInput = z.infer<typeof passwordResetSchema>;
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+export type DeleteAccountInput = z.infer<typeof deleteAccountSchema>;
+export type AdminUserStatusInput = z.infer<typeof adminUserStatusSchema>;
 export type QrCreateInput = z.infer<typeof qrCreateSchema>;
 export type QrUpdateInput = z.infer<typeof qrUpdateSchema>;
 export type FolderCreateInput = z.infer<typeof folderCreateSchema>;

@@ -38,6 +38,16 @@ const MESSAGE_MAP: Record<string, MessageKey> = {
   "User not found": "errors.userNotFound",
   "Link not found": "errors.linkNotFound",
   "Invalid data": "errors.invalidData",
+  "Please choose a photo": "errors.avatarRequired",
+  "Only PNG, JPG, and WEBP are supported": "errors.avatarType",
+  "Photo is too large to edit. Try a file under 12MB.": "errors.avatarTooLarge",
+  "Current password is incorrect": "errors.currentPasswordInvalid",
+  "You can't delete the superadmin account": "errors.cannotDeleteAdmin",
+  "You can't change the superadmin password": "errors.cannotChangeAdminPassword",
+  "This account is inactive": "errors.accountDisabled",
+  "You can't deactivate the superadmin account": "errors.cannotDisableAdmin",
+  "You can't deactivate your own account": "errors.cannotDisableSelf",
+  "This account is deleted": "errors.cannotDisableDeleted",
 };
 
 const CODE_MAP: Record<string, MessageKey> = {
@@ -48,6 +58,7 @@ const CODE_MAP: Record<string, MessageKey> = {
   EMAIL_TAKEN: "errors.emailTaken",
   INVALID_CREDENTIALS: "errors.invalidCredentials",
   EMAIL_UNVERIFIED: "errors.emailUnverified",
+  ACCOUNT_DISABLED: "errors.accountDisabled",
 };
 
 export function translateMessage(t: Translator, message?: string) {

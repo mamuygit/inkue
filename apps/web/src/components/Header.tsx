@@ -109,10 +109,15 @@ export function Header() {
 
   return (
     <AppBar
-      position="sticky"
+      position={inApp ? "relative" : "sticky"}
       color="inherit"
       elevation={0}
-      sx={{ borderBottom: "1px solid", borderColor: "divider", bgcolor: "background.paper" }}
+      sx={{
+        borderBottom: "1px solid",
+        borderColor: "divider",
+        bgcolor: "background.paper",
+        flexShrink: 0,
+      }}
     >
       {inApp ? (
         <Box sx={{ px: { xs: 2, sm: 3 } }}>{toolbar}</Box>

@@ -1,11 +1,15 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { adminUserStatusSchema } from "@mamuy/shared";
 import { DonateClick, QrCode, QrScan, User } from "../db/entities";
 import { resolveDateRange } from "../common/date-range";
+import { parseDto } from "../common/parse-dto";
+import { isSuperadminEmail } from "../common/superadmin";
 import { bangkokDate } from "../common/util";
 import { scanBreakdown } from "../common/scan-breakdown";
 import { SpacesService } from "../spaces/spaces.service";
+import type { AuthUser } from "../auth/current-user.decorator";
 
 const QR_BASE = () =>
   (process.env.NEXT_PUBLIC_QR_BASE_URL ?? "https://q.mamuy.dev").replace(/\/$/, "");
@@ -262,6 +266,8 @@ export class AdminService {
       .addSelect("user.createdAt", "createdAt")
       .addSelect("user.lastLoginAt", "lastLoginAt")
       .addSelect("user.emailVerifiedAt", "emailVerifiedAt")
+      .addSelect("user.deletedAt", "deletedAt")
+      .addSelect("user.disabledAt", "disabledAt")
       .addSelect("COUNT(DISTINCT qr.id)", "qrCount")
       .addSelect("COUNT(DISTINCT scan.id)", "scanCount")
       .addSelect("COUNT(DISTINCT donate.id)", "donateCount")
@@ -270,6 +276,8 @@ export class AdminService {
       .addGroupBy("user.createdAt")
       .addGroupBy("user.lastLoginAt")
       .addGroupBy("user.emailVerifiedAt")
+      .addGroupBy("user.deletedAt")
+      .addGroupBy("user.disabledAt")
       .orderBy("user.createdAt", "DESC");
 
     if (q) qb.andWhere("user.email ILIKE :q", { q: `%${q}%` });
@@ -283,6 +291,8 @@ export class AdminService {
       createdAt: Date;
       lastLoginAt: Date | null;
       emailVerifiedAt: Date | null;
+      deletedAt: Date | null;
+      disabledAt: Date | null;
       qrCount: string;
       scanCount: string;
       donateCount: string;
@@ -298,6 +308,8 @@ export class AdminService {
         createdAt: row.createdAt,
         lastLoginAt: row.lastLoginAt,
         verified: Boolean(row.emailVerifiedAt),
+        deleted: Boolean(row.deletedAt),
+        disabled: Boolean(row.disabledAt),
         qrCount: Number(row.qrCount),
         scanCount: Number(row.scanCount),
         donateCount: Number(row.donateCount),
@@ -316,22 +328,54 @@ export class AdminService {
       .orderBy("qr.createdAt", "DESC")
       .getMany();
 
-    const [scanCount, donateCount] = await Promise.all([
+    const [scanCount, donateCount, donates] = await Promise.all([
       this.scans.createQueryBuilder("scan").innerJoin("scan.qrCode", "qr").where("qr.userId = :id", { id }).getCount(),
       this.donates.count({ where: { userId: id } }),
+      this.donates.find({
+        where: { userId: id },
+        order: { createdAt: "DESC" },
+        take: 20,
+      }),
     ]);
 
     return {
       id: user.id,
       email: user.email,
+      isAdmin: isSuperadminEmail(user.email),
+      avatarUrl: user.avatarKey ? this.spaces.url(user.avatarKey) : null,
       createdAt: user.createdAt,
       lastLoginAt: user.lastLoginAt,
       verified: Boolean(user.emailVerifiedAt),
+      deleted: Boolean(user.deletedAt),
+      disabled: Boolean(user.disabledAt),
       qrCount: qrs.length,
       scanCount,
       donateCount,
       qrs: qrs.map((qr) => this.mapQr(qr, user.email)),
+      donates: donates.map((row) => ({
+        id: row.id,
+        createdAt: row.createdAt,
+        path: row.path,
+      })),
     };
+  }
+
+  async setUserStatus(id: string, raw: unknown, actor: AuthUser) {
+    const { active } = parseDto(adminUserStatusSchema, raw);
+    const user = await this.users.findOne({ where: { id } });
+    if (!user) throw new NotFoundException("User not found");
+    if (isSuperadminEmail(user.email)) {
+      throw new ForbiddenException("You can't deactivate the superadmin account");
+    }
+    if (user.id === actor.userId && !active) {
+      throw new ForbiddenException("You can't deactivate your own account");
+    }
+    if (user.deletedAt) {
+      throw new ForbiddenException("This account is deleted");
+    }
+    user.disabledAt = active ? null : new Date();
+    await this.users.save(user);
+    return this.getUser(id);
   }
 
   async listQr(query: { q?: string; page?: string; limit?: string }) {

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -10,10 +11,13 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { randomBytes, randomInt } from "crypto";
+import { nanoid } from "nanoid";
 import {
   DISPOSABLE_EMAIL_DOMAINS,
   OTP,
   PASSWORD_RESET,
+  changePasswordSchema,
+  deleteAccountSchema,
   loginSchema,
   otpRequestSchema,
   otpVerifySchema,
@@ -24,6 +28,7 @@ import {
 import { IsNull, Repository } from "typeorm";
 import { OtpChallenge, OtpDailyLimit, User } from "../db/entities";
 import { MailService } from "../mail/mail.service";
+import { SpacesService } from "../spaces/spaces.service";
 import { parseDto } from "../common/parse-dto";
 import { hashPassword, verifyPassword } from "../common/password";
 import { isSuperadminEmail, superadminEmail, superadminPassword } from "../common/superadmin";
@@ -40,6 +45,7 @@ export class AuthService implements OnModuleInit {
     @InjectRepository(OtpDailyLimit) private limits: Repository<OtpDailyLimit>,
     private mail: MailService,
     private jwt: JwtService,
+    private spaces: SpacesService,
   ) {}
 
   async onModuleInit() {
@@ -83,8 +89,60 @@ export class AuthService implements OnModuleInit {
       user.email = email;
       dirty = true;
     }
+    if (user.disabledAt) {
+      user.disabledAt = null;
+      dirty = true;
+    }
     if (dirty) await this.users.save(user);
     this.logger.log("Superadmin account ready");
+  }
+
+  private invalidCredentials(): never {
+    throw new HttpException(
+      {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        code: "INVALID_CREDENTIALS",
+        message: "Invalid email or password",
+      },
+      HttpStatus.UNAUTHORIZED,
+    );
+  }
+
+  private isDeleted(user?: User | null) {
+    return Boolean(user?.deletedAt);
+  }
+
+  private isDisabled(user?: User | null) {
+    return Boolean(user?.disabledAt);
+  }
+
+  private isBlocked(user?: User | null) {
+    return this.isDeleted(user) || this.isDisabled(user);
+  }
+
+  private accountDisabled(): never {
+    throw new HttpException(
+      {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        code: "ACCOUNT_DISABLED",
+        message: "This account is inactive",
+      },
+      HttpStatus.UNAUTHORIZED,
+    );
+  }
+
+  private avatarUrl(user: User) {
+    return user.avatarKey ? this.spaces.url(user.avatarKey) : null;
+  }
+
+  private publicUser(user: User) {
+    return {
+      id: user.id,
+      email: user.email,
+      isAdmin: isSuperadminEmail(user.email),
+      avatarUrl: this.avatarUrl(user),
+      deletedAt: user.deletedAt,
+    };
   }
 
   private pepper() {
@@ -259,16 +317,10 @@ export class AuthService implements OnModuleInit {
     }
 
     const matches = await verifyPassword(password, user.passwordHash);
-    if (!matches) {
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.UNAUTHORIZED,
-          code: "INVALID_CREDENTIALS",
-          message: "Invalid email or password",
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
+    if (!matches || this.isDeleted(user)) {
+      this.invalidCredentials();
     }
+    if (this.isDisabled(user)) this.accountDisabled();
 
     if (!user.emailVerifiedAt) {
       throw new HttpException(
@@ -291,7 +343,7 @@ export class AuthService implements OnModuleInit {
     this.assertNotDisposable(email);
 
     const user = await this.users.findOne({ where: { email } });
-    if (!user?.passwordHash || user.emailVerifiedAt) {
+    if (!user?.passwordHash || user.emailVerifiedAt || this.isBlocked(user)) {
       return {
         ok: true,
         email,
@@ -342,7 +394,7 @@ export class AuthService implements OnModuleInit {
     }
 
     const user = await this.users.findOne({ where: { email } });
-    if (!user?.passwordHash) {
+    if (!user?.passwordHash || this.isBlocked(user)) {
       await fail();
     }
 
@@ -358,8 +410,77 @@ export class AuthService implements OnModuleInit {
 
   async me(userId: string) {
     const user = await this.users.findOne({ where: { id: userId } });
-    if (!user) throw new UnauthorizedException();
-    return { id: user.id, email: user.email, isAdmin: isSuperadminEmail(user.email) };
+    if (!user || this.isBlocked(user)) throw new UnauthorizedException();
+    return this.publicUser(user);
+  }
+
+  async uploadAvatar(userId: string, file: Express.Multer.File) {
+    const user = await this.requireActiveUser(userId);
+    if (!file) throw new BadRequestException("Please choose a photo");
+    const mime = (file.mimetype || "").toLowerCase();
+    const name = (file.originalname || "").toLowerCase();
+    const allowedMime = ["image/png", "image/jpeg", "image/jpg", "image/pjpeg", "image/webp"];
+    const allowedExt = /\.(png|jpe?g|webp)$/;
+    if (!allowedMime.includes(mime) && !allowedExt.test(name)) {
+      throw new BadRequestException("Only PNG, JPG, and WEBP are supported");
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      throw new BadRequestException("File must be 2MB or smaller");
+    }
+    const ext = mime.includes("webp") || name.endsWith(".webp")
+      ? "webp"
+      : mime.includes("png") || name.endsWith(".png")
+        ? "png"
+        : "jpeg";
+    const key = this.spaces.key(`avatars/${userId}/${nanoid(10)}.${ext}`);
+    await this.spaces.put(key, file.buffer, mime || `image/${ext}`);
+    const previous = user.avatarKey;
+    user.avatarKey = key;
+    await this.users.save(user);
+    if (previous && previous !== key) await this.spaces.delete(previous);
+    return this.publicUser(user);
+  }
+
+  async deleteAvatar(userId: string) {
+    const user = await this.requireActiveUser(userId);
+    if (user.avatarKey) await this.spaces.delete(user.avatarKey);
+    user.avatarKey = null;
+    await this.users.save(user);
+    return this.publicUser(user);
+  }
+
+  async changePassword(userId: string, raw: unknown) {
+    const { currentPassword, password } = parseDto(changePasswordSchema, raw);
+    const user = await this.requireActiveUser(userId);
+    if (isSuperadminEmail(user.email)) {
+      throw new ForbiddenException("You can't change the superadmin password");
+    }
+    if (!user.passwordHash || !(await verifyPassword(currentPassword, user.passwordHash))) {
+      throw new UnauthorizedException("Current password is incorrect");
+    }
+    user.passwordHash = await hashPassword(password);
+    await this.users.save(user);
+    return { ok: true as const };
+  }
+
+  async deleteAccount(userId: string, raw: unknown) {
+    const { password } = parseDto(deleteAccountSchema, raw);
+    const user = await this.requireActiveUser(userId);
+    if (isSuperadminEmail(user.email)) {
+      throw new ForbiddenException("You can't delete the superadmin account");
+    }
+    if (!user.passwordHash || !(await verifyPassword(password, user.passwordHash))) {
+      throw new UnauthorizedException("Current password is incorrect");
+    }
+    user.deletedAt = new Date();
+    await this.users.save(user);
+    return { ok: true as const };
+  }
+
+  private async requireActiveUser(userId: string) {
+    const user = await this.users.findOne({ where: { id: userId } });
+    if (!user || this.isBlocked(user)) throw new UnauthorizedException();
+    return user;
   }
 
   async requestPasswordReset(raw: unknown, req: Request) {
@@ -418,7 +539,7 @@ export class AuthService implements OnModuleInit {
     }
 
     const user = await this.users.findOne({ where: { email } });
-    if (user?.passwordHash && user.emailVerifiedAt) {
+    if (user?.passwordHash && user.emailVerifiedAt && !this.isBlocked(user)) {
       const token = randomBytes(PASSWORD_RESET.tokenBytes).toString("hex");
       const expiresAt = new Date(Date.now() + PASSWORD_RESET.ttlMinutes * 60 * 1000);
       await this.challenges.manager.transaction(async (em) => {
@@ -491,7 +612,7 @@ export class AuthService implements OnModuleInit {
     }
 
     const user = await this.users.findOne({ where: { email } });
-    if (!user?.passwordHash || !user.emailVerifiedAt) {
+    if (!user?.passwordHash || !user.emailVerifiedAt || this.isBlocked(user)) {
       await fail();
     }
 

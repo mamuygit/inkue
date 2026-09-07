@@ -14,9 +14,23 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
   return (
     <DashboardMenuProvider>
-      <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          ...(isApp
+            ? { height: "100dvh", maxHeight: "100dvh", overflow: "hidden" }
+            : { minHeight: "100vh" }),
+        }}
+      >
         <Header />
-        <Box component="main" sx={{ flex: 1 }}>
+        <Box
+          component="main"
+          sx={{
+            flex: 1,
+            ...(isApp ? { minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {}),
+          }}
+        >
           {children}
         </Box>
         {isApp ? null : <Footer />}

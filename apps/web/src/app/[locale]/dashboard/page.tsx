@@ -6,9 +6,9 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { CHART } from "@mamuy/shared";
-import { BarChart } from "@mui/x-charts/BarChart";
 import { ScanAreaChart } from "@/components/ScanAreaChart";
 import { ScanBreakdownCharts } from "@/components/ScanBreakdownCharts";
+import { StatBars } from "@/components/StatBars";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
@@ -49,8 +49,10 @@ export default function DashboardPage() {
     queryFn: () => apiFetch<MineStats>(`/stats/me?${statsQuery(from, to)}`, { token }),
   });
 
-  const barLabels = (stats.data?.byQr ?? []).map((row) => shortLabel(row.title, row.destinationUrl));
-  const barValues = (stats.data?.byQr ?? []).map((row) => row.scanCount);
+  const barRows = (stats.data?.byQr ?? []).map((row) => ({
+    label: shortLabel(row.title, row.destinationUrl),
+    count: row.scanCount,
+  }));
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
@@ -114,19 +116,7 @@ export default function DashboardPage() {
         <Typography fontWeight={700} sx={{ px: 1, pt: 1 }}>
           {t("dashboard.byLink")}
         </Typography>
-        {barValues.length ? (
-          <BarChart
-            layout="horizontal"
-            height={Math.max(240, barValues.length * 40)}
-            yAxis={[{ scaleType: "band", data: barLabels }]}
-            series={[{ data: barValues, label: t("dashboard.scans"), color: CHART.bar }]}
-            margin={{ left: 120, right: 16 }}
-          />
-        ) : (
-          <Typography color="text.secondary" sx={{ px: 1, py: 3 }}>
-            {t("dashboard.noUsage")}
-          </Typography>
-        )}
+        <StatBars rows={barRows} color={CHART.bar} emptyText={t("dashboard.noUsage")} />
       </Paper>
 
       <Paper variant="outlined" sx={{ p: 2 }}>

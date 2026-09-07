@@ -10,6 +10,7 @@ import { ScanAreaChart } from "@/components/ScanAreaChart";
 import { ScanBreakdownCharts } from "@/components/ScanBreakdownCharts";
 import { DateRangeFilter } from "@/components/DateRangeFilter";
 import { LocaleLink } from "@/components/LocaleLink";
+import { PageLoading } from "@/components/PageLoading";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
@@ -60,11 +61,7 @@ export default function AdminQrDetailPage() {
   });
 
   if (qr.isLoading) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 5 }}>
-        <Typography>{t("dashboard.loading")}</Typography>
-      </Container>
-    );
+    return <PageLoading />;
   }
 
   if (!qr.data) {

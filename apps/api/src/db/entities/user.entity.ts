@@ -35,6 +35,15 @@ export class User {
   @Column({ type: "timestamptz", nullable: true })
   lastLoginAt: Date | null;
 
+  @Column({ type: "varchar", nullable: true })
+  avatarKey: string | null;
+
+  @Column({ type: "timestamptz", nullable: true })
+  deletedAt: Date | null;
+
+  @Column({ type: "timestamptz", nullable: true })
+  disabledAt: Date | null;
+
   @OneToMany(() => QrCode, (qr) => qr.user)
   qrCodes: QrCode[];
 

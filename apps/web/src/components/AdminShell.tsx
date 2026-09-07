@@ -18,8 +18,21 @@ import { LangSwitch } from "./LangSwitch";
 import { LocaleLink } from "./LocaleLink";
 import { useI18n } from "@/i18n/LocaleProvider";
 import { stripLocalePrefix } from "@/i18n/path";
+import { alpha } from "@mui/material/styles";
+import { COLORS } from "@mamuy/shared";
 
 const DRAWER_WIDTH = 240;
+
+const navItemSx = {
+  mx: 1,
+  mb: 0.75,
+  borderRadius: 1.5,
+  "&:hover": { bgcolor: "grey.50" },
+  "&.Mui-selected": {
+    bgcolor: alpha(COLORS.primary, 0.12),
+    "&:hover": { bgcolor: alpha(COLORS.primary, 0.18) },
+  },
+};
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const { t } = useI18n();
@@ -42,21 +55,21 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   );
 
   const nav = (
-    <Box sx={{ width: DRAWER_WIDTH }} onClick={() => setOpen(false)}>
+    <Box sx={{ width: "100%" }} onClick={() => setOpen(false)}>
       <List disablePadding>
-        <ListItemButton component={LocaleLink} href="/admin" selected={overviewActive} sx={{ mx: 1, mt: 1, borderRadius: 1 }}>
+        <ListItemButton component={LocaleLink} href="/admin" selected={overviewActive} sx={{ ...navItemSx, mt: 1 }}>
           <ListItemIcon sx={{ minWidth: 40 }}>
             <AdminPanelSettingsOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary={t("admin.overview")} />
         </ListItemButton>
-        <ListItemButton component={LocaleLink} href="/admin/users" selected={usersActive} sx={{ mx: 1, borderRadius: 1 }}>
+        <ListItemButton component={LocaleLink} href="/admin/users" selected={usersActive} sx={navItemSx}>
           <ListItemIcon sx={{ minWidth: 40 }}>
             <GroupOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary={t("admin.users")} />
         </ListItemButton>
-        <ListItemButton component={LocaleLink} href="/admin/qr" selected={qrActive} sx={{ mx: 1, borderRadius: 1 }}>
+        <ListItemButton component={LocaleLink} href="/admin/qr" selected={qrActive} sx={navItemSx}>
           <ListItemIcon sx={{ minWidth: 40 }}>
             <QrCode2Icon />
           </ListItemIcon>
@@ -66,7 +79,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           component={LocaleLink}
           href="/admin/donates"
           selected={donateActive}
-          sx={{ mx: 1, mb: 1, borderRadius: 1 }}
+          sx={navItemSx}
         >
           <ListItemIcon sx={{ minWidth: 40 }}>
             <FavoriteBorderIcon />
@@ -78,7 +91,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <Box sx={{ display: "flex", alignItems: "stretch", minHeight: { md: "calc(100vh - 73px)" } }}>
+    <Box sx={{ display: "flex", alignItems: "stretch", flex: 1, minHeight: 0, width: "100%" }}>
       <Drawer
         variant="temporary"
         open={open}
@@ -112,15 +125,20 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           display: { xs: "none", md: "block" },
           width: DRAWER_WIDTH,
           flexShrink: 0,
+          height: "100%",
           "& .MuiDrawer-paper": {
             width: DRAWER_WIDTH,
             boxSizing: "border-box",
             position: "relative",
             height: "100%",
+            overflowX: "hidden",
+            overflowY: "auto",
+            bgcolor: "background.paper",
             borderRight: "1px solid",
             borderColor: "divider",
             display: "flex",
             flexDirection: "column",
+            zIndex: 0,
           },
         }}
         open
@@ -128,7 +146,19 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         {nav}
         <Box sx={{ mt: "auto" }}>{version}</Box>
       </Drawer>
-      <Box sx={{ flex: 1, minWidth: 0 }}>{children}</Box>
+      <Box
+        sx={{
+          flex: 1,
+          minWidth: 0,
+          minHeight: 0,
+          overflow: "auto",
+          overscrollBehavior: "contain",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {children}
+      </Box>
     </Box>
   );
 }

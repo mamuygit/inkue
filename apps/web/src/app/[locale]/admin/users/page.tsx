@@ -1,7 +1,7 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
+import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -26,6 +26,8 @@ type UserRow = {
   createdAt: string;
   lastLoginAt: string | null;
   verified: boolean;
+  deleted: boolean;
+  disabled: boolean;
   qrCount: number;
   scanCount: number;
   donateCount: number;
@@ -62,23 +64,31 @@ export default function AdminUsersPage() {
   });
 
   return (
-    <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
+    <Box sx={{ px: { xs: 2, md: 3 }, py: { xs: 2, md: 3 } }}>
       <Typography component="h1" variant="h4" fontWeight={800} sx={{ mb: 3 }}>
         {t("admin.users")}
       </Typography>
-      <TextField
-        size="small"
-        value={q}
-        onChange={(event) => setQ(event.target.value)}
-        placeholder={t("admin.searchUsers")}
-        sx={{ mb: 2, maxWidth: 360, width: "100%" }}
-      />
       <Paper variant="outlined">
+        <Box sx={{ p: 2, pb: 1.5 }}>
+          <TextField
+            size="small"
+            value={q}
+            onChange={(event) => setQ(event.target.value)}
+            placeholder={t("admin.searchUsers")}
+            sx={{ maxWidth: 420, width: "100%", bgcolor: "#fff" }}
+          />
+        </Box>
         <TableContainer>
-          <Table size="small">
+          <Table
+            sx={{
+              "& .MuiTableCell-root": { py: 2, px: 2.5 },
+              "& .MuiTableCell-head": { fontWeight: 700, bgcolor: "grey.50" },
+            }}
+          >
             <TableHead>
               <TableRow>
                 <TableCell>{t("admin.email")}</TableCell>
+                <TableCell>{t("admin.status")}</TableCell>
                 <TableCell>{t("admin.created")}</TableCell>
                 <TableCell>{t("admin.lastLogin")}</TableCell>
                 <TableCell align="right">{t("admin.qrCount")}</TableCell>
@@ -97,9 +107,18 @@ export default function AdminUsersPage() {
                     >
                       {row.email}
                     </Box>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.25 }}>
                       {row.verified ? t("admin.verified") : t("admin.unverified")}
                     </Typography>
+                  </TableCell>
+                  <TableCell>
+                    {row.deleted ? (
+                      <Chip label={t("admin.deleted")} size="small" color="error" />
+                    ) : row.disabled ? (
+                      <Chip label={t("admin.inactive")} size="small" color="warning" />
+                    ) : (
+                      <Chip label={t("admin.active")} size="small" color="success" variant="outlined" />
+                    )}
                   </TableCell>
                   <TableCell>{formatWhen(row.createdAt, locale, t("admin.never"))}</TableCell>
                   <TableCell>{formatWhen(row.lastLoginAt, locale, t("admin.never"))}</TableCell>
@@ -110,7 +129,7 @@ export default function AdminUsersPage() {
               ))}
               {!list.isLoading && !(list.data?.items.length ?? 0) ? (
                 <TableRow>
-                  <TableCell colSpan={6}>
+                  <TableCell colSpan={7}>
                     <Typography color="text.secondary">{t("admin.emptyUsers")}</Typography>
                   </TableCell>
                 </TableRow>
@@ -131,6 +150,6 @@ export default function AdminUsersPage() {
           rowsPerPageOptions={[10, 20, 50]}
         />
       </Paper>
-    </Container>
+    </Box>
   );
 }

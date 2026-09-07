@@ -33,6 +33,16 @@ export function createAppTheme(locale: Locale) {
     MuiTextField: {
       defaultProps: { fullWidth: true, size: "medium", hiddenLabel: true },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: { backgroundColor: "#FFFFFF" },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: { backgroundColor: "#fff" },
+      },
+    },
     MuiPaper: {
       styleOverrides: { root: { backgroundImage: "none" } },
     },

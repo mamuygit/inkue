@@ -30,6 +30,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LocaleLink } from "@/components/LocaleLink";
+import { PageLoading } from "@/components/PageLoading";
 import { QrListRow } from "@/components/QrListRow";
 import { type FolderRecord, type QrRecord } from "@/components/QrEditor";
 import { useI18n } from "@/i18n/LocaleProvider";
@@ -57,15 +58,8 @@ function matchesQr(qr: QrRecord, query: string) {
 }
 
 export default function QrManagePage() {
-  const { t } = useI18n();
   return (
-    <Suspense
-      fallback={
-        <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
-          <Typography>{t("dashboard.loading")}</Typography>
-        </Container>
-      }
-    >
+    <Suspense fallback={<PageLoading />}>
       <QrManageView />
     </Suspense>
   );
@@ -274,11 +268,7 @@ function QrManageView() {
   );
 
   if (list.isLoading || folders.isLoading) {
-    return (
-      <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
-        <Typography>{t("dashboard.loading")}</Typography>
-      </Container>
-    );
+    return <PageLoading />;
   }
 
   if (folderMissing) {
@@ -298,22 +288,16 @@ function QrManageView() {
     const folderTitle = viewingUnfiled ? t("dashboard.unfiled") : selectedFolder!.name;
     return (
       <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          justifyContent="space-between"
-          alignItems={{ sm: "flex-start" }}
-          spacing={2}
-          sx={{ mb: 3 }}
-        >
-          <Box sx={{ minWidth: 0 }}>
-            <Breadcrumbs sx={{ mb: 1 }}>
-              <Box component={LocaleLink} href="/dashboard/qr" sx={{ color: "text.secondary", textDecoration: "none", "&:hover": { color: "primary.main" } }}>
-                {t("dashboard.allFolders")}
-              </Box>
-              <Typography color="text.primary">{folderTitle}</Typography>
-            </Breadcrumbs>
-            <Stack direction="row" alignItems="center" spacing={0.5} flexWrap="wrap" useFlexGap>
-              <Typography component="h1" variant="h4" fontWeight={800}>
+        <Box sx={{ mb: 3 }}>
+          <Breadcrumbs sx={{ mb: 1 }}>
+            <Box component={LocaleLink} href="/dashboard/qr" sx={{ color: "text.secondary", textDecoration: "none", "&:hover": { color: "primary.main" } }}>
+              {t("dashboard.allFolders")}
+            </Box>
+            <Typography color="text.primary">{folderTitle}</Typography>
+          </Breadcrumbs>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
+            <Stack direction="row" alignItems="center" spacing={0.5} sx={{ minWidth: 0, flex: 1 }}>
+              <Typography component="h1" variant="h4" fontWeight={800} noWrap>
                 {folderTitle}
               </Typography>
               {!viewingUnfiled && selectedFolder ? (
@@ -335,12 +319,12 @@ function QrManageView() {
                 </>
               ) : null}
             </Stack>
-            <Typography color="text.secondary">{t("dashboard.qrCount", { count: currentItems.length })}</Typography>
-          </Box>
-          {headerActions}
-        </Stack>
+            <Box sx={{ flexShrink: 0 }}>{headerActions}</Box>
+          </Stack>
+          <Typography color="text.secondary">{t("dashboard.qrCount", { count: currentItems.length })}</Typography>
+        </Box>
 
-        <Box sx={{ maxWidth: 420, mb: 3 }}>
+        <Box sx={{ width: 1, maxWidth: { md: 420 }, mb: 3 }}>
           <TextField
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -387,23 +371,17 @@ function QrManageView() {
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        justifyContent="space-between"
-        alignItems={{ sm: "flex-start" }}
-        spacing={2}
-        sx={{ mb: 3 }}
-      >
-        <Box>
-          <Typography component="h1" variant="h4" fontWeight={800}>
+      <Box sx={{ mb: 3 }}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
+          <Typography component="h1" variant="h4" fontWeight={800} noWrap sx={{ minWidth: 0 }}>
             {t("menu.folders")}
           </Typography>
-          <Typography color="text.secondary">{t("menu.foldersHint")}</Typography>
-        </Box>
-        {headerActions}
-      </Stack>
+          <Box sx={{ flexShrink: 0 }}>{headerActions}</Box>
+        </Stack>
+        <Typography color="text.secondary">{t("menu.foldersHint")}</Typography>
+      </Box>
 
-      <Box sx={{ maxWidth: 420, mb: 3 }}>
+      <Box sx={{ width: 1, maxWidth: { md: 420 }, mb: 3 }}>
         <TextField
           value={query}
           onChange={(e) => setQuery(e.target.value)}

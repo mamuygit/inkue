@@ -3,6 +3,7 @@
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import QrCode2Icon from "@mui/icons-material/QrCode2";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -15,10 +16,18 @@ import Typography from "@mui/material/Typography";
 import { useQuery } from "@tanstack/react-query";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useI18n } from "@/i18n/LocaleProvider";
 import { localizedPath } from "@/i18n/path";
-import { apiFetch } from "@/lib/api";
+import { ApiError, apiFetch } from "@/lib/api";
+
+export type AuthMe = {
+  id: string;
+  email: string;
+  isAdmin: boolean;
+  avatarUrl: string | null;
+  deletedAt: string | null;
+};
 
 function initialFromEmail(email: string) {
   const letter = email.trim().charAt(0);
@@ -34,9 +43,17 @@ export function UserMenu({ email }: { email: string }) {
   const me = useQuery({
     queryKey: ["auth-me"],
     enabled: Boolean(session?.accessToken),
-    queryFn: () => apiFetch<{ isAdmin: boolean }>("/auth/me", { token: session?.accessToken }),
-    staleTime: 60_000,
+    queryFn: () => apiFetch<AuthMe>("/auth/me", { token: session?.accessToken }),
+    staleTime: 15_000,
+    refetchInterval: 15_000,
   });
+
+  useEffect(() => {
+    if (!session?.accessToken) return;
+    if (me.isError && me.error instanceof ApiError && me.error.status === 401) {
+      void signOut({ callbackUrl: localizedPath("/", locale) });
+    }
+  }, [locale, me.error, me.isError, session?.accessToken]);
 
   function go(path: string) {
     setAnchor(null);
@@ -54,6 +71,8 @@ export function UserMenu({ email }: { email: string }) {
         sx={{ ml: 0.5 }}
       >
         <Avatar
+          src={me.data?.avatarUrl ?? undefined}
+          alt=""
           sx={{
             width: 36,
             height: 36,
@@ -100,6 +119,14 @@ export function UserMenu({ email }: { email: string }) {
           </ListItemIcon>
           {t("menu.manageQr")}
         </MenuItem>
+        {me.data?.isAdmin ? null : (
+          <MenuItem onClick={() => go("/dashboard/account")}>
+            <ListItemIcon>
+              <PersonOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            {t("nav.account")}
+          </MenuItem>
+        )}
         {me.data?.isAdmin ? (
           <MenuItem onClick={() => go("/admin")}>
             <ListItemIcon>

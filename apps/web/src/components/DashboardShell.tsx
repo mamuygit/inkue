@@ -19,8 +19,21 @@ import { LangSwitch } from "./LangSwitch";
 import { LocaleLink } from "./LocaleLink";
 import { useI18n } from "@/i18n/LocaleProvider";
 import { stripLocalePrefix } from "@/i18n/path";
+import { alpha } from "@mui/material/styles";
+import { COLORS } from "@mamuy/shared";
 
 const DRAWER_WIDTH = 240;
+
+const navItemSx = {
+  mx: 1,
+  mb: 0.75,
+  borderRadius: 1.5,
+  "&:hover": { bgcolor: "grey.50" },
+  "&.Mui-selected": {
+    bgcolor: alpha(COLORS.primary, 0.12),
+    "&:hover": { bgcolor: alpha(COLORS.primary, 0.18) },
+  },
+};
 
 function isDashboardHome(inner: string) {
   return inner === "/dashboard";
@@ -32,7 +45,8 @@ function isFoldersPage(inner: string) {
 
 function isCreateQrPage(inner: string) {
   if (inner === "/dashboard/qr/create" || inner === "/dashboard/new") return true;
-  return /^\/dashboard\/[^/]+$/.test(inner) && inner !== "/dashboard/qr";
+  if (inner === "/dashboard/qr" || inner === "/dashboard/account") return false;
+  return /^\/dashboard\/[^/]+$/.test(inner);
 }
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -54,22 +68,22 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   );
 
   const nav = (
-    <Box sx={{ width: DRAWER_WIDTH }} onClick={() => setOpen(false)}>
+    <Box sx={{ width: "100%" }} onClick={() => setOpen(false)}>
       <List disablePadding>
-        <ListItemButton component={LocaleLink} href="/dashboard" selected={dashboardActive} sx={{ mx: 1, mt: 1, borderRadius: 1 }}>
+        <ListItemButton component={LocaleLink} href="/dashboard" selected={dashboardActive} sx={{ ...navItemSx, mt: 1 }}>
           <ListItemIcon sx={{ minWidth: 40 }}>
             <DashboardOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary={t("menu.dashboard")} />
         </ListItemButton>
-        <ListSubheader disableSticky sx={{ bgcolor: "transparent", lineHeight: 2.4, mt: 1 }}>
+        <ListSubheader disableSticky sx={{ bgcolor: "transparent", lineHeight: 2.4, mt: 0.5 }}>
           {t("menu.qr")}
         </ListSubheader>
         <ListItemButton
           component={LocaleLink}
           href="/dashboard/qr"
           selected={foldersActive}
-          sx={{ mx: 1, borderRadius: 1 }}
+          sx={navItemSx}
         >
           <ListItemIcon sx={{ minWidth: 40 }}>
             <FolderOutlinedIcon />
@@ -80,7 +94,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           component={LocaleLink}
           href="/dashboard/qr/create"
           selected={createActive}
-          sx={{ mx: 1, mb: 1, borderRadius: 1 }}
+          sx={navItemSx}
         >
           <ListItemIcon sx={{ minWidth: 40 }}>
             <LinkOutlinedIcon />
@@ -92,7 +106,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <Box sx={{ display: "flex", alignItems: "stretch", minHeight: { md: "calc(100vh - 73px)" } }}>
+    <Box sx={{ display: "flex", alignItems: "stretch", flex: 1, minHeight: 0, width: "100%" }}>
       <Drawer
         variant="temporary"
         open={open}
@@ -126,15 +140,20 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           display: { xs: "none", md: "block" },
           width: DRAWER_WIDTH,
           flexShrink: 0,
+          height: "100%",
           "& .MuiDrawer-paper": {
             width: DRAWER_WIDTH,
             boxSizing: "border-box",
             position: "relative",
             height: "100%",
+            overflowX: "hidden",
+            overflowY: "auto",
+            bgcolor: "background.paper",
             borderRight: "1px solid",
             borderColor: "divider",
             display: "flex",
             flexDirection: "column",
+            zIndex: 0,
           },
         }}
         open
@@ -142,7 +161,19 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         {nav}
         <Box sx={{ mt: "auto" }}>{version}</Box>
       </Drawer>
-      <Box sx={{ flex: 1, minWidth: 0 }}>{children}</Box>
+      <Box
+        sx={{
+          flex: 1,
+          minWidth: 0,
+          minHeight: 0,
+          overflow: "auto",
+          overscrollBehavior: "contain",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {children}
+      </Box>
     </Box>
   );
 }

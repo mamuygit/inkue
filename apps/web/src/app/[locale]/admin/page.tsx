@@ -6,12 +6,12 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { CHART } from "@mamuy/shared";
-import { PieChart } from "@mui/x-charts/PieChart";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
 import { AdminTrendChart } from "@/components/AdminTrendChart";
 import { DateRangeFilter } from "@/components/DateRangeFilter";
+import { DonutChart } from "@/components/DonutChart";
 import { LocaleLink } from "@/components/LocaleLink";
 import { ScanBreakdownCharts } from "@/components/ScanBreakdownCharts";
 import { useI18n } from "@/i18n/LocaleProvider";
@@ -138,49 +138,25 @@ export default function AdminOverviewPage() {
           <Typography fontWeight={700} sx={{ px: 1, pt: 1 }}>
             {t("admin.usedSplit")}
           </Typography>
-          {(data?.usedInRange || data?.unusedInRange) ? (
-            <PieChart
-              height={260}
-              series={[
-                {
-                  data: [
-                    { id: 0, value: data?.usedInRange ?? 0, label: t("admin.used"), color: CHART.used },
-                    { id: 1, value: data?.unusedInRange ?? 0, label: t("admin.unused"), color: CHART.unused },
-                  ],
-                  innerRadius: 50,
-                  paddingAngle: 2,
-                },
-              ]}
-            />
-          ) : (
-            <Typography color="text.secondary" sx={{ px: 1, py: 3 }}>
-              {t("dashboard.noUsage")}
-            </Typography>
-          )}
+          <DonutChart
+            slices={[
+              { id: 0, value: data?.usedInRange ?? 0, label: t("admin.used"), color: CHART.used },
+              { id: 1, value: data?.unusedInRange ?? 0, label: t("admin.unused"), color: CHART.unused },
+            ]}
+            emptyText={t("dashboard.noUsage")}
+          />
         </Paper>
         <Paper variant="outlined" sx={{ p: 2, flex: 1 }}>
           <Typography fontWeight={700} sx={{ px: 1, pt: 1 }}>
             {t("admin.donates")}
           </Typography>
-          {(data?.donateSignedIn || data?.donateAnonymous) ? (
-            <PieChart
-              height={260}
-              series={[
-                {
-                  data: [
-                    { id: 0, value: data?.donateSignedIn ?? 0, label: t("admin.donateSignedIn"), color: CHART.signedIn },
-                    { id: 1, value: data?.donateAnonymous ?? 0, label: t("admin.donateAnonymous"), color: CHART.anonymous },
-                  ],
-                  innerRadius: 50,
-                  paddingAngle: 2,
-                },
-              ]}
-            />
-          ) : (
-            <Typography color="text.secondary" sx={{ px: 1, py: 3 }}>
-              {t("admin.emptyDonates")}
-            </Typography>
-          )}
+          <DonutChart
+            slices={[
+              { id: 0, value: data?.donateSignedIn ?? 0, label: t("admin.donateSignedIn"), color: CHART.signedIn },
+              { id: 1, value: data?.donateAnonymous ?? 0, label: t("admin.donateAnonymous"), color: CHART.anonymous },
+            ]}
+            emptyText={t("admin.emptyDonates")}
+          />
         </Paper>
       </Stack>
 

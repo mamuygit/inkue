@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { CHART } from "@mamuy/shared";
-import { BarChart } from "@mui/x-charts/BarChart";
+import { StatBars } from "@/components/StatBars";
 import { useI18n } from "@/i18n/LocaleProvider";
 
 export type BreakdownRow = { label: string; count: number };
@@ -30,24 +30,16 @@ export function ScanBreakdownCharts({
       <Typography fontWeight={700} sx={{ px: 1, pt: 1 }}>
         {title}
       </Typography>
-      {rows.length ? (
-        <BarChart
-          layout="horizontal"
-          height={Math.max(200, rows.length * 40)}
-          yAxis={[{ scaleType: "band", data: rows.map((row) => labelOf(row.label)) }]}
-          series={[{ data: rows.map((row) => row.count), label: t("dashboard.scans"), color: CHART.bar }]}
-          margin={{ left: 120, right: 16 }}
-        />
-      ) : (
-        <Typography color="text.secondary" sx={{ px: 1, py: 3 }}>
-          {t("stats.empty")}
-        </Typography>
-      )}
+      <StatBars
+        rows={rows.map((row) => ({ label: labelOf(row.label), count: row.count }))}
+        color={CHART.bar}
+        emptyText={t("stats.empty")}
+      />
     </Box>
   );
 
   return (
-    <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 2 }}>
+    <Stack direction={{ xs: "column", md: "row" }} spacing={{ xs: 2, md: 4 }}>
       {renderChart(t("stats.referrers"), byReferrer)}
       {renderChart(t("stats.devices"), byDevice)}
     </Stack>
