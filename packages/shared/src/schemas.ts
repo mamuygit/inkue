@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { FRAME_SHAPES, LOGO_POSITIONS } from "./constants";
+import { AVATAR_FRAMES, FRAME_SHAPES, LOGO_POSITIONS } from "./constants";
 
 export const emailSchema = z
   .string()
@@ -60,6 +60,10 @@ export const adminUserStatusSchema = z.object({
 
 export const logoPositionSchema = z.enum(LOGO_POSITIONS);
 export const frameShapeSchema = z.enum(FRAME_SHAPES);
+export const avatarFrameSchema = z.enum(AVATAR_FRAMES);
+export const avatarFrameUpdateSchema = z.object({
+  frame: avatarFrameSchema,
+});
 
 export const hexColorSchema = z
   .string()
@@ -136,3 +140,4 @@ export type FolderCreateInput = z.infer<typeof folderCreateSchema>;
 export type FolderUpdateInput = z.infer<typeof folderUpdateSchema>;
 export type LogoPosition = z.infer<typeof logoPositionSchema>;
 export type FrameShape = z.infer<typeof frameShapeSchema>;
+export type AvatarFrameInput = z.infer<typeof avatarFrameUpdateSchema>;

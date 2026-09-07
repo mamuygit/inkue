@@ -48,6 +48,7 @@ const MESSAGE_MAP: Record<string, MessageKey> = {
   "You can't deactivate the superadmin account": "errors.cannotDisableAdmin",
   "You can't deactivate your own account": "errors.cannotDisableSelf",
   "This account is deleted": "errors.cannotDisableDeleted",
+  "This frame is locked": "errors.frameLocked",
 };
 
 const CODE_MAP: Record<string, MessageKey> = {

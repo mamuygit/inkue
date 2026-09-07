@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="t4" x1="12" y1="4" x2="88" y2="96" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE4E6"/>
+      <stop offset=".35" stop-color="#E11D48"/>
+      <stop offset=".55" stop-color="#E8A598"/>
+      <stop offset="1" stop-color="#9F1239"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="44.2" stroke="url(#t4)" stroke-width="3.6"/>
+  <circle cx="50" cy="50" r="40.8" stroke="url(#t4)" stroke-width="3.2"/>
+  <g fill="url(#t4)">
+    <g transform="rotate(0 50 50)"><polygon points="50,1.6 53.4,7.6 50,10.4 46.6,7.6"/></g>
+    <g transform="rotate(45 50 50)"><polygon points="50,1.6 53.4,7.6 50,10.4 46.6,7.6"/></g>
+    <g transform="rotate(90 50 50)"><polygon points="50,1.6 53.4,7.6 50,10.4 46.6,7.6"/></g>
+    <g transform="rotate(135 50 50)"><polygon points="50,1.6 53.4,7.6 50,10.4 46.6,7.6"/></g>
+    <g transform="rotate(180 50 50)"><polygon points="50,1.6 53.4,7.6 50,10.4 46.6,7.6"/></g>
+    <g transform="rotate(225 50 50)"><polygon points="50,1.6 53.4,7.6 50,10.4 46.6,7.6"/></g>
+    <g transform="rotate(270 50 50)"><polygon points="50,1.6 53.4,7.6 50,10.4 46.6,7.6"/></g>
+    <g transform="rotate(315 50 50)"><polygon points="50,1.6 53.4,7.6 50,10.4 46.6,7.6"/></g>
+  </g>
+  <circle cx="50" cy="50" r="38.8" stroke="#FFF1F2" stroke-opacity=".85" stroke-width=".8" stroke-dasharray="1.6 1.8" stroke-linecap="round"/>
+</svg>

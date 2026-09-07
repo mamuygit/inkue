@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   Post,
   Req,
   UploadedFile,
@@ -72,6 +73,12 @@ export class AuthController {
   @Delete("avatar")
   deleteAvatar(@CurrentUser() user: AuthUser) {
     return this.auth.deleteAvatar(user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch("avatar-frame")
+  setAvatarFrame(@CurrentUser() user: AuthUser, @Body() body: unknown) {
+    return this.auth.setAvatarFrame(user.userId, body);
   }
 
   @UseGuards(JwtAuthGuard)

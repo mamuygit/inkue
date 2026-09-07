@@ -5,7 +5,6 @@ import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import QrCode2Icon from "@mui/icons-material/QrCode2";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -13,10 +12,12 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
+import type { AvatarFrame } from "@mamuy/shared";
 import { useQuery } from "@tanstack/react-query";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ProfileAvatar } from "@/components/ProfileAvatar";
 import { useI18n } from "@/i18n/LocaleProvider";
 import { localizedPath } from "@/i18n/path";
 import { ApiError, apiFetch } from "@/lib/api";
@@ -26,13 +27,10 @@ export type AuthMe = {
   email: string;
   isAdmin: boolean;
   avatarUrl: string | null;
+  createdAt: string;
+  avatarFrame: AvatarFrame;
   deletedAt: string | null;
 };
-
-function initialFromEmail(email: string) {
-  const letter = email.trim().charAt(0);
-  return letter ? letter.toUpperCase() : "?";
-}
 
 export function UserMenu({ email }: { email: string }) {
   const { t, locale } = useI18n();
@@ -68,21 +66,15 @@ export function UserMenu({ email }: { email: string }) {
         aria-haspopup="menu"
         aria-expanded={open ? "true" : undefined}
         size="small"
-        sx={{ ml: 0.5 }}
+        sx={{ ml: 0.5, overflow: "visible" }}
       >
-        <Avatar
-          src={me.data?.avatarUrl ?? undefined}
-          alt=""
-          sx={{
-            width: 36,
-            height: 36,
-            bgcolor: "primary.main",
-            fontSize: 15,
-            fontWeight: 800,
-          }}
-        >
-          {initialFromEmail(email)}
-        </Avatar>
+        <ProfileAvatar
+          src={me.data?.avatarUrl}
+          email={email}
+          frame={me.data?.avatarFrame}
+          createdAt={me.data?.createdAt}
+          size={36}
+        />
       </IconButton>
       <Menu
         anchorEl={anchor}

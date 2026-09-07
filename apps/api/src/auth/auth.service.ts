@@ -16,11 +16,14 @@ import {
   DISPOSABLE_EMAIL_DOMAINS,
   OTP,
   PASSWORD_RESET,
+  avatarFrameUpdateSchema,
   changePasswordSchema,
   deleteAccountSchema,
+  isAvatarFrameUnlocked,
   loginSchema,
   otpRequestSchema,
   otpVerifySchema,
+  parseAvatarFrame,
   passwordResetRequestSchema,
   passwordResetSchema,
   registerSchema,
@@ -141,6 +144,8 @@ export class AuthService implements OnModuleInit {
       email: user.email,
       isAdmin: isSuperadminEmail(user.email),
       avatarUrl: this.avatarUrl(user),
+      createdAt: user.createdAt,
+      avatarFrame: parseAvatarFrame(user.avatarFrame),
       deletedAt: user.deletedAt,
     };
   }
@@ -445,6 +450,17 @@ export class AuthService implements OnModuleInit {
     const user = await this.requireActiveUser(userId);
     if (user.avatarKey) await this.spaces.delete(user.avatarKey);
     user.avatarKey = null;
+    await this.users.save(user);
+    return this.publicUser(user);
+  }
+
+  async setAvatarFrame(userId: string, raw: unknown) {
+    const { frame } = parseDto(avatarFrameUpdateSchema, raw);
+    const user = await this.requireActiveUser(userId);
+    if (!isAvatarFrameUnlocked(frame, user.createdAt, user.email)) {
+      throw new BadRequestException("This frame is locked");
+    }
+    user.avatarFrame = frame;
     await this.users.save(user);
     return this.publicUser(user);
   }

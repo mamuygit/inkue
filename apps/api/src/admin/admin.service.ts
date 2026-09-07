@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { adminUserStatusSchema } from "@mamuy/shared";
+import { adminUserStatusSchema, parseAvatarFrame } from "@mamuy/shared";
 import { DonateClick, QrCode, QrScan, User } from "../db/entities";
 import { resolveDateRange } from "../common/date-range";
 import { parseDto } from "../common/parse-dto";
@@ -343,6 +343,7 @@ export class AdminService {
       email: user.email,
       isAdmin: isSuperadminEmail(user.email),
       avatarUrl: user.avatarKey ? this.spaces.url(user.avatarKey) : null,
+      avatarFrame: parseAvatarFrame(user.avatarFrame),
       createdAt: user.createdAt,
       lastLoginAt: user.lastLoginAt,
       verified: Boolean(user.emailVerifiedAt),

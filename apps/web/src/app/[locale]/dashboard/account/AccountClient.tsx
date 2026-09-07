@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Alert from "@mui/material/Alert";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -12,10 +12,20 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { changePasswordSchema, deleteAccountSchema } from "@mamuy/shared";
+import {
+  AVATAR_FRAMES,
+  AVATAR_FRAME_MIN_MONTHS,
+  changePasswordSchema,
+  deleteAccountSchema,
+  effectiveAvatarFrame,
+  isAvatarFrameUnlocked,
+  type AvatarFrame,
+} from "@mamuy/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useRef, useState, type DragEvent } from "react";
@@ -25,6 +35,7 @@ import { AvatarCropDialog } from "@/components/AvatarCropDialog";
 import { FormField } from "@/components/FormField";
 import { PageLoading } from "@/components/PageLoading";
 import { PasswordField } from "@/components/PasswordField";
+import { ProfileAvatar } from "@/components/ProfileAvatar";
 import type { AuthMe } from "@/components/UserMenu";
 import { translateApiError, translateMessage } from "@/i18n/errors";
 import { useI18n } from "@/i18n/LocaleProvider";
@@ -34,6 +45,15 @@ import { ApiError, apiFetch } from "@/lib/api";
 const PHOTO_TYPES = new Set(["image/png", "image/jpeg", "image/jpg", "image/pjpeg", "image/webp"]);
 const PHOTO_EXT = /\.(png|jpe?g|webp)$/i;
 const PHOTO_EDIT_MAX = 12 * 1024 * 1024;
+const FRAME_PICKER_SIZE = 72;
+
+const FRAME_LABEL: Record<AvatarFrame, "account.frameNone" | "account.frameTier2" | "account.frameTier3" | "account.frameTier4" | "account.frameTier5"> = {
+  none: "account.frameNone",
+  tier2: "account.frameTier2",
+  tier3: "account.frameTier3",
+  tier4: "account.frameTier4",
+  tier5: "account.frameTier5",
+};
 
 const passwordFormSchema = changePasswordSchema
   .extend({
@@ -43,11 +63,6 @@ const passwordFormSchema = changePasswordSchema
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
-
-function initialFromEmail(email: string) {
-  const letter = email.trim().charAt(0);
-  return letter ? letter.toUpperCase() : "?";
-}
 
 export function AccountClient() {
   const { t, locale } = useI18n();
@@ -63,6 +78,8 @@ export function AccountClient() {
   const [passwordNotice, setPasswordNotice] = useState<string | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [frameNotice, setFrameNotice] = useState<string | null>(null);
+  const [frameError, setFrameError] = useState<string | null>(null);
 
   const me = useQuery({
     queryKey: ["auth-me"],
@@ -111,6 +128,24 @@ export function AccountClient() {
     onError: (err) => {
       setPhotoNotice(null);
       setPhotoError(err instanceof ApiError ? translateApiError(t, err) : t("errors.generic"));
+    },
+  });
+
+  const setFrame = useMutation({
+    mutationFn: (frame: AvatarFrame) =>
+      apiFetch<AuthMe>("/auth/avatar-frame", {
+        method: "PATCH",
+        token,
+        body: JSON.stringify({ frame }),
+      }),
+    onSuccess: (data) => {
+      queryClient.setQueryData(["auth-me"], data);
+      setFrameError(null);
+      setFrameNotice(t("account.frameUpdated"));
+    },
+    onError: (err) => {
+      setFrameNotice(null);
+      setFrameError(err instanceof ApiError ? translateApiError(t, err) : t("errors.generic"));
     },
   });
 
@@ -217,13 +252,13 @@ export function AccountClient() {
         </Alert>
       ) : null}
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2.5} alignItems={{ xs: "stretch", sm: "flex-start" }}>
-        <Avatar
-          src={me.data?.avatarUrl ?? undefined}
-          alt=""
-          sx={{ width: 112, height: 112, bgcolor: "primary.main", fontSize: 40, fontWeight: 800, flexShrink: 0 }}
-        >
-          {initialFromEmail(email)}
-        </Avatar>
+        <ProfileAvatar
+          src={me.data?.avatarUrl}
+          email={email}
+          frame={me.data?.avatarFrame}
+          createdAt={me.data?.createdAt}
+          size={112}
+        />
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <input
             id="account-photo"
@@ -382,6 +417,83 @@ export function AccountClient() {
         {photoCard}
         {me.data && !isAdmin ? passwordCard : null}
       </Stack>
+
+      {me.data ? (
+        <Paper variant="outlined" sx={{ p: { xs: 2.5, md: 3 }, mb: 2 }}>
+          <Typography variant="h6" fontWeight={800}>
+            {t("account.frame")}
+          </Typography>
+          <Typography color="text.secondary" variant="body2" sx={{ mb: 2 }}>
+            {t("account.frameHint")}
+          </Typography>
+          {frameNotice ? (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              {frameNotice}
+            </Alert>
+          ) : null}
+          {frameError ? (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {frameError}
+            </Alert>
+          ) : null}
+          <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
+            {AVATAR_FRAMES.map((frame) => {
+              const unlocked = isAvatarFrameUnlocked(frame, me.data.createdAt, email);
+              const selected = effectiveAvatarFrame(me.data.avatarFrame, me.data.createdAt, email) === frame;
+              const months = AVATAR_FRAME_MIN_MONTHS[frame];
+              const label = t(FRAME_LABEL[frame]);
+              const requirement =
+                frame === "none"
+                  ? label
+                  : months % 12 === 0
+                    ? t("account.frameNeedYears", { years: months / 12 })
+                    : t("account.frameNeedMonths", { months });
+              const tooltip = frame === "none" ? label : `${label} — ${requirement}`;
+              return (
+                <Tooltip key={frame} title={tooltip}>
+                  <Box component="span" sx={{ display: "inline-flex" }}>
+                    <IconButton
+                      disabled={!unlocked || setFrame.isPending}
+                      onClick={() => {
+                        if (!selected) setFrame.mutate(frame);
+                      }}
+                      aria-label={tooltip}
+                      aria-pressed={selected}
+                      sx={{
+                        p: 0.75,
+                        borderRadius: "50%",
+                        border: "2px solid",
+                        borderColor: selected ? "primary.main" : "transparent",
+                        bgcolor: "transparent",
+                        "&.Mui-disabled": { opacity: 1 },
+                      }}
+                    >
+                      <Box sx={{ position: "relative", opacity: unlocked ? 1 : 0.78 }}>
+                        <ProfileAvatar src={me.data.avatarUrl} email={email} frame={frame} size={FRAME_PICKER_SIZE} />
+                        {unlocked ? null : (
+                          <LockOutlinedIcon
+                            sx={{
+                              position: "absolute",
+                              right: 0,
+                              bottom: 0,
+                              fontSize: 15,
+                              color: "text.secondary",
+                              bgcolor: "background.paper",
+                              borderRadius: "50%",
+                              boxShadow: "0 0 0 1px rgba(15, 23, 42, 0.08)",
+                              p: "2px",
+                            }}
+                          />
+                        )}
+                      </Box>
+                    </IconButton>
+                  </Box>
+                </Tooltip>
+              );
+            })}
+          </Stack>
+        </Paper>
+      ) : null}
 
       <AvatarCropDialog
         open={Boolean(cropSrc)}

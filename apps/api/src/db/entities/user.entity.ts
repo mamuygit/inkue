@@ -38,6 +38,9 @@ export class User {
   @Column({ type: "varchar", nullable: true })
   avatarKey: string | null;
 
+  @Column({ type: "varchar", default: "none" })
+  avatarFrame: string;
+
   @Column({ type: "timestamptz", nullable: true })
   deletedAt: Date | null;
 

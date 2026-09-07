@@ -1,7 +1,6 @@
 "use client";
 
 import Alert from "@mui/material/Alert";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -24,6 +23,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { LocaleLink } from "@/components/LocaleLink";
 import { PageLoading } from "@/components/PageLoading";
+import { ProfileAvatar } from "@/components/ProfileAvatar";
 import { translateApiError } from "@/i18n/errors";
 import { useI18n } from "@/i18n/LocaleProvider";
 import { formatWhen, shortLabel } from "@/lib/admin-format";
@@ -50,6 +50,7 @@ type UserDetail = {
   email: string;
   isAdmin: boolean;
   avatarUrl: string | null;
+  avatarFrame: string | null;
   createdAt: string;
   lastLoginAt: string | null;
   verified: boolean;
@@ -61,11 +62,6 @@ type UserDetail = {
   qrs: QrRow[];
   donates: DonateRow[];
 };
-
-function initialFromEmail(email: string) {
-  const letter = email.trim().charAt(0);
-  return letter ? letter.toUpperCase() : "?";
-}
 
 export default function AdminUserDetailPage() {
   const { t, locale } = useI18n();
@@ -139,13 +135,13 @@ export default function AdminUserDetailPage() {
 
       <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 }, mb: 3 }}>
         <Stack direction={{ xs: "column", sm: "row" }} spacing={2.5} alignItems={{ sm: "flex-start" }}>
-          <Avatar
-            src={row.avatarUrl ?? undefined}
-            alt=""
-            sx={{ width: 72, height: 72, bgcolor: "primary.main", fontWeight: 800, fontSize: 28 }}
-          >
-            {initialFromEmail(row.email)}
-          </Avatar>
+          <ProfileAvatar
+            src={row.avatarUrl}
+            email={row.email}
+            frame={row.avatarFrame}
+            createdAt={row.createdAt}
+            size={72}
+          />
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap sx={{ mb: 1 }}>
               <Typography component="h1" variant="h4" fontWeight={800} sx={{ wordBreak: "break-all" }}>
