@@ -34,6 +34,7 @@ import { MailService } from "../mail/mail.service";
 import { SpacesService } from "../spaces/spaces.service";
 import { parseDto } from "../common/parse-dto";
 import { hashPassword, verifyPassword } from "../common/password";
+import { isRegisterOtpEnabled } from "../common/register-otp";
 import { isSuperadminEmail, superadminEmail, superadminPassword } from "../common/superadmin";
 import { bangkokDate, clientIp, hashValue, nextBangkokMidnight, verifyHash } from "../common/util";
 import { Request } from "express";
@@ -297,11 +298,21 @@ export class AuthService implements OnModuleInit {
     }
 
     const passwordHash = await hashPassword(password);
-    if (!existing) {
-      await this.users.save(this.users.create({ email, passwordHash, emailVerifiedAt: null }));
-    } else {
-      existing.passwordHash = passwordHash;
-      await this.users.save(existing);
+    const skipOtp = !isRegisterOtpEnabled();
+    const now = skipOtp ? new Date() : null;
+
+    const user = !existing
+      ? await this.users.save(
+          this.users.create({ email, passwordHash, emailVerifiedAt: now }),
+        )
+      : await this.users.save(
+          Object.assign(existing, { passwordHash, emailVerifiedAt: existing.emailVerifiedAt ?? now }),
+        );
+
+    if (skipOtp) {
+      user.lastLoginAt = new Date();
+      await this.users.save(user);
+      return this.issueToken(user);
     }
 
     return this.sendRegistrationOtp(email, req);
@@ -327,7 +338,7 @@ export class AuthService implements OnModuleInit {
     }
     if (this.isDisabled(user)) this.accountDisabled();
 
-    if (!user.emailVerifiedAt) {
+    if (!user.emailVerifiedAt && isRegisterOtpEnabled()) {
       throw new HttpException(
         {
           statusCode: HttpStatus.UNAUTHORIZED,
@@ -346,6 +357,15 @@ export class AuthService implements OnModuleInit {
   async requestOtp(raw: unknown, req: Request) {
     const { email } = parseDto(otpRequestSchema, raw);
     this.assertNotDisposable(email);
+
+    if (!isRegisterOtpEnabled()) {
+      return {
+        ok: true,
+        email,
+        expiresInSec: OTP.ttlMinutes * 60,
+        remaining: OTP.maxSendPerDay,
+      };
+    }
 
     const user = await this.users.findOne({ where: { email } });
     if (!user?.passwordHash || user.emailVerifiedAt || this.isBlocked(user)) {

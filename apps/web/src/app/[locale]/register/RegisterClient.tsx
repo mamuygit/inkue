@@ -74,19 +74,26 @@ function RegisterForm({ callbackUrl: callbackFromQuery }: { callbackUrl?: string
   };
 
   const register = useMutation({
-    mutationFn: (payload: { email: string; password: string }) =>
-      apiFetch<{ remaining: number }>("/auth/register", {
+    mutationFn: async (payload: { email: string; password: string }) => {
+      const data = await apiFetch<{ accessToken?: string; remaining?: number }>("/auth/register", {
         method: "POST",
         body: JSON.stringify(payload),
-      }),
-    onSuccess: (_data, vars) => {
+      });
+      if (data.accessToken) await signInWithAccessToken(data.accessToken);
+      return data;
+    },
+    onSuccess: (data, vars) => {
+      if (data.accessToken) {
+        navigateAfterAuth(callbackUrl);
+        return;
+      }
       setEmail(vars.email);
       setStep("otp");
       setCooldown(OTP.resendCooldownSec);
       setBanner({ type: "info", text: t("register.sent", { email: vars.email }) });
       otpForm.reset({ otp: "" });
     },
-    onError: (err) => showApiError(err, t("login.sendFailed")),
+    onError: (err) => showApiError(err, t("register.failed")),
   });
 
   const requestOtp = useMutation({
