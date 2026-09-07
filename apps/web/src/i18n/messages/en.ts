@@ -1,11 +1,11 @@
 export const en = {
   brand: {
-    tagline: "Free QR Code Generator with Logo",
+    tagline: "Free Online QR Code Generator with Logo",
     description:
-      "{name} at qr.mamuy.dev is a free QR code generator with logo. Generate a free QR code, change the destination anytime without reprinting, and track scans. No ads.",
-    ogTitle: "Inkue — Free QR Code Generator with Logo",
+      "{name} is a free online QR code generator with logo. Generate a free QR code online, change the destination anytime without reprinting, and track scans. No ads.",
+    ogTitle: "Inkue — Free Online QR Code Generator with Logo",
     ogDescription:
-      "Generate free QR codes with your logo on Inkue. Change the link anytime without reprinting, and track every scan at qr.mamuy.dev.",
+      "Generate free QR codes online with your logo on Inkue. Change the link anytime without reprinting, and track every scan.",
   },
   nav: {
     faq: "FAQ",
@@ -33,9 +33,9 @@ export const en = {
     label: "Language",
   },
   home: {
-    headline: "Inkue — Free QR Code Generator",
+    headline: "Inkue — Free Online QR Code Generator",
     aioSummary:
-      "Inkue at qr.mamuy.dev is a free QR code generator with logo: generate a free QR code, change the destination anytime without reprinting, and track scans. No ads, no paywall. Made in Thailand.",
+      "Inkue is a free online QR code generator with logo: generate a free QR code online, change the destination anytime without reprinting, and track scans. No ads, no paywall. Made in Thailand.",
     subtitle:
       "Scans go through {domain} first, then to your destination — update the URL without reprinting the QR.",
     ctaCreate: "Create a free QR",
@@ -43,8 +43,8 @@ export const en = {
     odometerTitle: "QR codes created on {name}",
     odometerCaption: "Always at least 7 digits, based on the real count",
     odometerAria: "{count} QR codes created",
-    howTitle: "How the Inkue QR code generator works",
-    featureLogo: "Generate a free QR code with your logo",
+    howTitle: "How the Inkue online QR code generator works",
+    featureLogo: "Generate a free QR code online with your logo",
     featureLogoBody: "Drop your brand mark onto the QR. High error correction keeps an Inkue QR scannable.",
     featureLink: "Change the link anytime (dynamic QR)",
     featureLinkBody: "The printed code stays the same. Edit the destination URL whenever you need — no reprinting.",
@@ -64,11 +64,11 @@ export const en = {
   faq: {
     title: "Inkue FAQ",
     description:
-      "What Inkue is, how to generate a free QR code with a logo, change the QR link, and track scans at qr.mamuy.dev",
+      "What Inkue is, how to generate a free QR code online with a logo, change the QR link, and track scans",
     qWhat: "What is Inkue?",
     aWhat:
-      "Inkue is a free QR code generator at qr.mamuy.dev. Create an Inkue QR code with your logo, change the destination later, and track scans. No ads and no required payment.",
-    qGenerate: "How do I generate a free QR code on Inkue?",
+      "Inkue is a free online QR code generator. Create an Inkue QR code with your logo, change the destination later, and track scans. No ads and no required payment.",
+    qGenerate: "How do I generate a free QR code online on Inkue?",
     aGenerate:
       "Open Inkue, create an account, then paste a destination URL. Add a logo if you want, download the QR, and print it. You can edit the destination later without reprinting.",
     q1: "Is it really free?",
@@ -82,7 +82,7 @@ export const en = {
     q5: "How do I verify my email?",
     a5: "When you register, we email a 6-digit OTP. You can send up to 5 codes per email per day (Bangkok time, UTC+7). After that, wait until the next day to request a new code.",
     q6: "Is Inkue a free QR code generator?",
-    a6: "Yes. Inkue at qr.mamuy.dev is a free online QR code generator with logo support, editable destination links, and scan tracking. There is no ad wall and no required payment.",
+    a6: "Yes. Inkue is a free online QR code generator with logo support, editable destination links, and scan tracking. There is no ad wall and no required payment.",
   },
   privacy: {
     title: "Privacy",
