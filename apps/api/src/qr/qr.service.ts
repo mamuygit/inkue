@@ -248,12 +248,22 @@ export class QrService {
     }
   }
 
+  private async previewScanUrl(userId: string, raw: unknown) {
+    const hash =
+      raw && typeof raw === "object" && "hash" in raw && typeof raw.hash === "string"
+        ? raw.hash.trim()
+        : "";
+    if (hash.length !== QR_HASH_LENGTH) return this.scanUrl("preview");
+    const owned = await this.qrs.findOne({ where: { hash, userId } });
+    return this.scanUrl(owned?.hash ?? "preview");
+  }
+
   async preview(userId: string, raw: unknown, logoFile?: Express.Multer.File) {
     const input = parseDto(qrCreateSchema, raw);
     let logo: Buffer | null = logoFile?.buffer ?? null;
     if (!logo && input.logoKey) logo = await this.loadLogo(input.logoKey);
     return this.composeOrThrow({
-      data: this.scanUrl("preview"),
+      data: await this.previewScanUrl(userId, raw),
       qrColor: input.qrColor,
       bgColor: input.bgColor,
       logo,

@@ -170,10 +170,11 @@ export function QrEditor({ existing }: { existing?: QrRecord }) {
     () =>
       JSON.stringify({
         ...values,
+        hash: existing?.hash ?? null,
         removeLogo,
         file: logoFile ? `${logoFile.name}-${logoFile.size}` : null,
       }),
-    [values, removeLogo, logoFile],
+    [values, existing?.hash, removeLogo, logoFile],
   );
 
   const previewQuery = useQuery({
@@ -189,6 +190,7 @@ export function QrEditor({ existing }: { existing?: QrRecord }) {
         frameShape: values.frameShape,
         frameBgColor: values.frameBgColor,
       };
+      if (existing?.hash) payload.hash = existing.hash;
       if (!removeLogo && values.logoKey && !logoFile) payload.logoKey = values.logoKey;
       const fd = new FormData();
       fd.append("payload", JSON.stringify(payload));
