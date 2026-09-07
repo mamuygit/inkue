@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const t = createTranslator(getMessages(locale));
   const tagline = t("brand.tagline");
   const description = t("brand.description", { name: BRAND.name });
-  const title = `${BRAND.name} | ${tagline}`;
+  const title = `${tagline} | ${BRAND.name}`;
   const ogTitle = t("brand.ogTitle");
   const ogDescription = t("brand.ogDescription");
   return {
@@ -57,25 +57,24 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     keywords:
       locale === "th"
         ? [
-            "Inkue",
-            "Inkue QR",
-            "สร้าง QR ฟรี Inkue",
+            "สร้าง qr code",
+            "สร้าง qr code ฟรี",
+            "ทำ qr code",
+            "สร้างคิวอาร์โค้ด",
+            "เจน qr",
+            "qr code generator",
             "สร้าง QR Code ออนไลน์ฟรี ใส่โลโก้",
-            "QR Code Generator ออนไลน์ฟรี",
             "QR เปลี่ยนลิงก์ได้",
-            "QR dynamic ฟรี",
-            "สร้าง QR ฟรี ไม่มีโฆษณา",
           ]
         : [
-            "Inkue",
-            "Inkue QR",
-            "Inkue QR code",
-            "Inkue QR code generator",
+            "qr code generator",
+            "free qr code generator",
+            "create qr code",
+            "make qr code",
+            "qr generator",
             "free online QR code generator",
-            "free QR code generator with logo",
-            "free dynamic QR code",
-            "change QR code link",
-            "QR scan tracking",
+            "qr code with logo",
+            "dynamic qr code",
           ],
     authors: [{ name: BRAND.name, url: appUrl }],
     openGraph: {

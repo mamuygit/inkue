@@ -28,7 +28,7 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = await resolveLocale(params);
   const { t } = await getT(locale);
-  const title = `${BRAND.name} | ${t("brand.tagline")}`;
+  const title = `${t("brand.tagline")} | ${BRAND.name}`;
   return {
     ...publicPageMetadata("/", locale, {
       title: t("brand.ogTitle"),

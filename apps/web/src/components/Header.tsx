@@ -99,9 +99,14 @@ export function Header() {
         ) : status === "authenticated" && session?.user?.email ? (
           <UserMenu email={session.user.email} />
         ) : (
-          <Button component={LocaleLink} href="/login" variant="contained" size="small">
-            {t("nav.signIn")}
-          </Button>
+          <>
+            <Button component={LocaleLink} href="/login" variant="contained" size="small">
+              {t("nav.signIn")}
+            </Button>
+            <Button component={LocaleLink} href="/register" variant="outlined" size="small">
+              {t("nav.signUp")}
+            </Button>
+          </>
         )}
       </Box>
     </Toolbar>

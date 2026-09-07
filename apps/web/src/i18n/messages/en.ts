@@ -1,16 +1,17 @@
 export const en = {
   brand: {
-    tagline: "Free Online QR Code Generator with Logo",
+    tagline: "Free QR Code Generator — Create QR Codes Online",
     description:
-      "{name} is a free online QR code generator with logo. Generate a free QR code online, change the destination anytime without reprinting, and track scans. No ads.",
-    ogTitle: "Inkue — Free Online QR Code Generator with Logo",
+      "Create a free QR code online. Make a QR code with your logo, change the link later without reprinting, and track scans. No ads.",
+    ogTitle: "Create a Free QR Code Online | Inkue",
     ogDescription:
-      "Generate free QR codes online with your logo on Inkue. Change the link anytime without reprinting, and track every scan.",
+      "Free QR code generator: create a QR code with your logo, change the destination anytime, and track every scan.",
   },
   nav: {
     faq: "FAQ",
     dashboard: "Dashboard",
     signIn: "Sign in",
+    signUp: "Sign up",
     signOut: "Sign out",
     account: "Account",
     privacy: "Privacy",
@@ -33,9 +34,9 @@ export const en = {
     label: "Language",
   },
   home: {
-    headline: "Inkue — Free Online QR Code Generator",
+    headline: "Create a free QR code online",
     aioSummary:
-      "Inkue is a free online QR code generator with logo: generate a free QR code online, change the destination anytime without reprinting, and track scans. No ads, no paywall. Made in Thailand.",
+      "Free QR code generator with logo. Create a QR code, make it yours, change the link anytime without reprinting, and track scans. No ads, no paywall. Made in Thailand.",
     subtitle:
       "Scans go through {domain} first, then to your destination — update the URL without reprinting the QR.",
     ctaCreate: "Create a free QR",
@@ -43,8 +44,8 @@ export const en = {
     odometerTitle: "QR codes created on {name}",
     odometerCaption: "Always at least 7 digits, based on the real count",
     odometerAria: "{count} QR codes created",
-    howTitle: "How the Inkue online QR code generator works",
-    featureLogo: "Generate a free QR code online with your logo",
+    howTitle: "How to create a QR code",
+    featureLogo: "Make a QR code with your logo",
     featureLogoBody: "Drop your brand mark onto the QR. High error correction keeps an Inkue QR scannable.",
     featureLink: "Change the link anytime (dynamic QR)",
     featureLinkBody: "The printed code stays the same. Edit the destination URL whenever you need — no reprinting.",
@@ -62,9 +63,9 @@ export const en = {
     copy: "Free to use, never required to pay",
   },
   faq: {
-    title: "Inkue FAQ",
+    title: "QR code generator FAQ",
     description:
-      "What Inkue is, how to generate a free QR code online with a logo, change the QR link, and track scans",
+      "How to create a free QR code online, make a QR with a logo, change the link, and track scans",
     qWhat: "What is Inkue?",
     aWhat:
       "Inkue is a free online QR code generator. Create an Inkue QR code with your logo, change the destination later, and track scans. No ads and no required payment.",
