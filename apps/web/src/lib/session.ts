@@ -1,4 +1,5 @@
 import { signIn } from "next-auth/react";
+import { claimGuestQrs } from "./guest";
 
 export async function signInWithAccessToken(accessToken: string) {
   const result = await signIn("credentials", {
@@ -6,6 +7,7 @@ export async function signInWithAccessToken(accessToken: string) {
     redirect: false,
   });
   if (!result?.ok) throw new Error("session");
+  await claimGuestQrs(accessToken);
 }
 
 export function navigateAfterAuth(url: string) {

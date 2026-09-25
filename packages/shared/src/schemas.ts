@@ -112,6 +112,16 @@ export const qrCreateSchema = z.object({
   folderId: folderIdSchema,
 });
 
+export const guestQrCreateSchema = z.object({
+  destinationUrl: destinationUrlSchema,
+  qrColor: hexColorSchema.default("#0F172A"),
+  bgColor: hexColorSchema.default("#FFFFFF"),
+});
+
+export const guestQrClaimSchema = z.object({
+  guestToken: z.string().trim().min(32).max(128),
+});
+
 export const qrUpdateSchema = z.object({
   destinationUrl: destinationUrlSchema.optional(),
   title: z.string().trim().max(80).optional().nullable(),
@@ -136,6 +146,7 @@ export type DeleteAccountInput = z.infer<typeof deleteAccountSchema>;
 export type AdminUserStatusInput = z.infer<typeof adminUserStatusSchema>;
 export type QrCreateInput = z.infer<typeof qrCreateSchema>;
 export type QrUpdateInput = z.infer<typeof qrUpdateSchema>;
+export type GuestQrCreateInput = z.infer<typeof guestQrCreateSchema>;
 export type FolderCreateInput = z.infer<typeof folderCreateSchema>;
 export type FolderUpdateInput = z.infer<typeof folderUpdateSchema>;
 export type LogoPosition = z.infer<typeof logoPositionSchema>;

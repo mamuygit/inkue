@@ -1,14 +1,24 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { randomBytes } from "crypto";
 import { nanoid } from "nanoid";
 import {
+  GUEST_QR,
   QR_HASH_LENGTH,
+  guestQrClaimSchema,
+  guestQrCreateSchema,
   qrCreateSchema,
   qrUpdateSchema,
   type QrCreateInput,
 } from "@mamuy/shared";
-import { Repository } from "typeorm";
-import { Folder, QrCode, QrScan } from "../db/entities";
+import { IsNull, Repository } from "typeorm";
+import { Folder, OtpDailyLimit, QrCode, QrScan } from "../db/entities";
 import { SpacesService } from "../spaces/spaces.service";
 import { composeQr } from "./qr-compose";
 import { bangkokDate, hashValue } from "../common/util";
@@ -25,6 +35,7 @@ export class QrService {
     @InjectRepository(QrCode) private qrs: Repository<QrCode>,
     @InjectRepository(QrScan) private scans: Repository<QrScan>,
     @InjectRepository(Folder) private folders: Repository<Folder>,
+    @InjectRepository(OtpDailyLimit) private limits: Repository<OtpDailyLimit>,
     private spaces: SpacesService,
   ) {}
 
@@ -136,13 +147,13 @@ export class QrService {
     });
     const imageKey = this.spaces.key(`codes/${hash}.png`);
     await this.spaces.put(imageKey, png, "image/png");
-    return imageKey;
+    return { imageKey, png };
   }
 
   async create(userId: string, raw: unknown) {
     const input = parseDto(qrCreateSchema, raw);
     const hash = await this.uniqueHash();
-    const imageKey = await this.renderAndStore(hash, {
+    const { imageKey } = await this.renderAndStore(hash, {
       qrColor: input.qrColor,
       bgColor: input.bgColor,
       logoKey: input.logoKey,
@@ -170,6 +181,97 @@ export class QrService {
     );
     saved.scanCount = 0;
     return this.map(saved);
+  }
+
+  private guestId(token: string) {
+    return hashValue(`guest:${token}`, process.env.NEXTAUTH_SECRET);
+  }
+
+  private guestLimitReached(message: string): never {
+    throw new HttpException(
+      { statusCode: HttpStatus.TOO_MANY_REQUESTS, code: "GUEST_LIMIT", message },
+      HttpStatus.TOO_MANY_REQUESTS,
+    );
+  }
+
+  async createGuest(raw: unknown, guestToken: string | undefined, ip: string) {
+    const input = parseDto(guestQrCreateSchema, raw);
+    const token = guestToken && guestToken.length >= 32 && guestToken.length <= 128
+      ? guestToken
+      : randomBytes(32).toString("hex");
+    const guestId = this.guestId(token);
+
+    const saved = await this.qrs.count({ where: { guestId, userId: IsNull() } });
+    if (saved >= GUEST_QR.maxSavedPerGuest) {
+      this.guestLimitReached("Sign up to save more QR codes");
+    }
+    const date = bangkokDate();
+    const ipKey = `guest-qr:ip:${hashValue(ip, process.env.NEXTAUTH_SECRET)}`;
+    const ipLimit = await this.limits.findOne({ where: { key: ipKey, date } });
+    if ((ipLimit?.sendCount ?? 0) >= GUEST_QR.maxSavedPerIpPerDay) {
+      this.guestLimitReached("Sign up to save more QR codes");
+    }
+
+    const hash = await this.uniqueHash();
+    const style = {
+      qrColor: input.qrColor,
+      bgColor: input.bgColor,
+      logoKey: null,
+      logoPosition: "center" as const,
+      frameShape: "none" as const,
+      frameBgColor: "#000000",
+    };
+    const { imageKey, png } = await this.renderAndStore(hash, style);
+    const row = await this.qrs.save(
+      this.qrs.create({
+        userId: null,
+        guestId,
+        hash,
+        destinationUrl: input.destinationUrl,
+        title: null,
+        ...style,
+        imageKey,
+        folderId: null,
+      }),
+    );
+    await this.limits.save(
+      Object.assign(ipLimit ?? this.limits.create({ key: ipKey, date, sendCount: 0, verifyFailCount: 0 }), {
+        sendCount: (ipLimit?.sendCount ?? 0) + 1,
+        lastSentAt: new Date(),
+      }),
+    );
+
+    return {
+      guestToken: token,
+      hash: row.hash,
+      scanUrl: this.scanUrl(row.hash),
+      destinationUrl: row.destinationUrl,
+      imageDataUrl: `data:image/png;base64,${png.toString("base64")}`,
+      remaining: Math.max(0, GUEST_QR.maxSavedPerGuest - saved - 1),
+    };
+  }
+
+  /** Plain QR that encodes the destination directly — nothing is stored. */
+  async staticGuest(raw: unknown) {
+    const input = parseDto(guestQrCreateSchema, raw);
+    return composeQr({
+      data: input.destinationUrl,
+      qrColor: input.qrColor,
+      bgColor: input.bgColor,
+      logo: null,
+      logoPosition: "center",
+      frameShape: "none",
+      frameBgColor: "#000000",
+    });
+  }
+
+  async claimGuest(userId: string, raw: unknown) {
+    const { guestToken } = parseDto(guestQrClaimSchema, raw);
+    const result = await this.qrs.update(
+      { guestId: this.guestId(guestToken), userId: IsNull() },
+      { userId, guestId: null },
+    );
+    return { claimed: result.affected ?? 0 };
   }
 
   async list(userId: string) {
@@ -218,7 +320,7 @@ export class QrService {
 
     let imageKey = existing.imageKey;
     if (styleChanged) {
-      imageKey = await this.renderAndStore(existing.hash, next);
+      ({ imageKey } = await this.renderAndStore(existing.hash, next));
     }
 
     Object.assign(existing, next, { imageKey });

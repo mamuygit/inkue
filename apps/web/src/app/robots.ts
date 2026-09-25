@@ -29,17 +29,21 @@ const AI_CRAWLERS = [
   "Amazonbot",
 ];
 
+const DISALLOW = ["/dashboard", "/th/dashboard", "/admin", "/th/admin", "/api", "/r/"];
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
+      // A crawler obeys only its most specific group, so each group must repeat the disallow list.
       ...[...SOCIAL_CRAWLERS, ...AI_CRAWLERS].map((userAgent) => ({
         userAgent,
         allow: "/",
+        disallow: DISALLOW,
       })),
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/dashboard", "/th/dashboard", "/admin", "/th/admin", "/api", "/r/"],
+        disallow: DISALLOW,
       },
     ],
     sitemap: `${appUrl}/sitemap.xml`,

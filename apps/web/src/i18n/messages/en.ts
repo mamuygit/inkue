@@ -58,6 +58,21 @@ export const en = {
     useCaseLine: "LINE Official Account",
     useCaseSocial: "Instagram and social profiles",
     useCaseCard: "Name cards and posters",
+    genTitle: "Generate a QR code now — no sign-up",
+    genUrl: "Link or text URL",
+    genQrColor: "QR color",
+    genBgColor: "Background",
+    genSubmit: "Generate QR code",
+    genPreviewAlt: "Your generated QR code",
+    genDownload: "Download PNG",
+    genAnother: "Make another",
+    genSavedNote:
+      "Saved temporarily in this browser. Sign up free to keep it, change the link later, and see scans. {remaining} temporary saves left.",
+    genStaticNote:
+      "You've used all temporary saves, so this is a plain QR that isn't stored — the link can't be changed later. Sign up free to save editable QR codes.",
+    genSignUp: "Sign up to keep this QR",
+    genFailed: "Couldn't generate the QR. Please try again.",
+    genOpenDashboard: "Open your QR dashboard",
   },
   footer: {
     copy: "Free to use, never required to pay",
@@ -71,7 +86,7 @@ export const en = {
       "Inkue is a free online QR code generator. Create an Inkue QR code with your logo, change the destination later, and track scans. No ads and no required payment.",
     qGenerate: "How do I generate a free QR code online on Inkue?",
     aGenerate:
-      "Open Inkue, create an account, then paste a destination URL. Add a logo if you want, download the QR, and print it. You can edit the destination later without reprinting.",
+      "Open Inkue, paste a link on the homepage, and download your QR right away — no sign-up needed. Create a free account to add a logo, edit the destination later without reprinting, and track scans.",
     q1: "Is it really free?",
     a1: "Yes. Generate free QR codes on Inkue at no cost, with no paywall. If you'd like to support the team, you can Donate via PayPal.",
     q2: "Why doesn't a scan go straight to my site?",
@@ -288,6 +303,7 @@ export const en = {
     logoSize: "File must be 2MB or smaller",
     logoMissing: "Uploaded logo not found",
     qrCreateFailed: "Couldn't create a QR code. Please try again.",
+    guestLimit: "Sign up to save more QR codes",
     logoUnreadable: "Couldn't read that logo. Try a PNG or JPG instead.",
     qrNotFound: "QR not found",
     linkNotFound: "Link not found",

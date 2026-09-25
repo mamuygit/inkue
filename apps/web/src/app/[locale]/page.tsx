@@ -6,6 +6,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { BRAND, COLORS } from "@mamuy/shared";
 import { FeatureFrames } from "@/components/FeatureFrames";
+import { HomeGenerator } from "@/components/HomeGenerator";
 import { LocaleLink } from "@/components/LocaleLink";
 import { Odometer, OdometerCaption } from "@/components/Odometer";
 import { getApiUrl } from "@/lib/api";
@@ -62,10 +63,8 @@ export default async function HomePage({ params }: Props) {
           <Typography textAlign="center" color="text.secondary" sx={{ mt: 2, fontSize: 18 }}>
             {t("home.subtitle", { domain: BRAND.scanDomain })}
           </Typography>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center" sx={{ mt: 4 }}>
-            <Button component={LocaleLink} href="/dashboard/qr/create" prefetch={false} variant="contained" size="large">
-              {t("home.ctaCreate")}
-            </Button>
+          <HomeGenerator />
+          <Stack direction="row" justifyContent="center" sx={{ mt: 3 }}>
             <Button
               component={LocaleLink}
               href="/faq"

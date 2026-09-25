@@ -24,12 +24,17 @@ export class QrCode {
   @PrimaryColumn()
   id: string;
 
-  @Column()
-  userId: string;
+  @Column({ type: "varchar", nullable: true })
+  userId: string | null;
 
-  @ManyToOne(() => User, (user) => user.qrCodes, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, (user) => user.qrCodes, { onDelete: "CASCADE", nullable: true })
   @JoinColumn({ name: "userId" })
-  user: User;
+  user: User | null;
+
+  /** Hash of the anonymous browser token; cleared once the QR is claimed by an account. */
+  @Index()
+  @Column({ type: "varchar", nullable: true })
+  guestId: string | null;
 
   @Column({ unique: true })
   hash: string;

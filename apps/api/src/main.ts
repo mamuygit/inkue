@@ -1,6 +1,6 @@
 import "./load-env";
 import "reflect-metadata";
-import { BRAND } from "@mamuy/shared";
+import { BRAND, GUEST_QR } from "@mamuy/shared";
 import { RequestMethod } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
@@ -27,7 +27,7 @@ async function bootstrap() {
   app.enableCors({
     origin: origins,
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", GUEST_QR.tokenHeader],
   });
 
   const port = Number(process.env.API_PORT ?? 3001);

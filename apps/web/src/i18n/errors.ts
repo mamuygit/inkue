@@ -60,6 +60,7 @@ const CODE_MAP: Record<string, MessageKey> = {
   INVALID_CREDENTIALS: "errors.invalidCredentials",
   EMAIL_UNVERIFIED: "errors.emailUnverified",
   ACCOUNT_DISABLED: "errors.accountDisabled",
+  GUEST_LIMIT: "errors.guestLimit",
 };
 
 export function translateMessage(t: Translator, message?: string) {

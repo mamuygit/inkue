@@ -48,6 +48,14 @@ export const PASSWORD_RESET = {
 
 export const QR_HASH_LENGTH = 8;
 
+/** Anonymous QR codes created from the homepage before signing up. */
+export const GUEST_QR = {
+  maxSavedPerGuest: 3,
+  maxSavedPerIpPerDay: 5,
+  tokenHeader: "x-guest-token",
+  tokenStorageKey: "inkue.guestToken",
+} as const;
+
 export const LOGO_POSITIONS = [
   "center",
   "top_left",

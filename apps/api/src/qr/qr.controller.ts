@@ -61,6 +61,11 @@ export class QrController {
     return this.qr.create(user.userId, body);
   }
 
+  @Post("claim")
+  claim(@CurrentUser() user: AuthUser, @Body() body: unknown) {
+    return this.qr.claimGuest(user.userId, body);
+  }
+
   @Get(":id/stats")
   stats(
     @CurrentUser() user: AuthUser,
