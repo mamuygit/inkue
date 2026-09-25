@@ -105,25 +105,31 @@ export function HomeGenerator() {
   }
 
   return (
-    <Paper variant="outlined" sx={{ mt: 4, p: { xs: 2.5, md: 3.5 }, textAlign: "left" }}>
-      <Typography component="h2" variant="h6" fontWeight={800} sx={{ mb: 2 }}>
-        {t("home.genTitle")}
-      </Typography>
-      {error ? (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      ) : null}
+    <Paper
+      variant="outlined"
+      sx={{
+        mt: 4,
+        p: { xs: 2.5, md: 3.5 },
+        textAlign: "left",
+        display: "flex",
+        flexDirection: { xs: "column", sm: "row" },
+        gap: { xs: 3, md: 4 },
+        alignItems: { sm: "center" },
+        boxShadow: "0 12px 40px rgba(37, 99, 235, 0.10)",
+      }}
+    >
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Typography component="h2" variant="h6" fontWeight={800} sx={{ mb: 2 }}>
+          {t("home.genTitle")}
+        </Typography>
+        {error ? (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        ) : null}
 
-      {result ? (
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={3} alignItems={{ xs: "stretch", sm: "flex-start" }}>
-          <Box
-            component="img"
-            src={result.src}
-            alt={t("home.genPreviewAlt")}
-            sx={{ width: { xs: "100%", sm: 220 }, maxWidth: 320, alignSelf: "center", borderRadius: 2, display: "block" }}
-          />
-          <Stack spacing={1.5} sx={{ flex: 1, minWidth: 0 }}>
+        {result ? (
+          <Stack spacing={1.5}>
             <Alert severity={result.kind === "saved" ? "success" : "warning"}>
               {result.kind === "saved"
                 ? t("home.genSavedNote", { remaining: result.remaining })
@@ -152,57 +158,86 @@ export function HomeGenerator() {
               </Button>
             </Stack>
           </Stack>
-        </Stack>
-      ) : (
-        <Box component="form" onSubmit={handleSubmit((v) => generate.mutate(v))}>
-          <Controller
-            name="destinationUrl"
-            control={control}
-            render={({ field }) => (
-              <FormField
-                label={t("home.genUrl")}
-                htmlFor="guestDestinationUrl"
-                error={translateMessage(t, formState.errors.destinationUrl?.message)}
-              >
-                <TextField
-                  {...field}
-                  id="guestDestinationUrl"
-                  placeholder="www.example.com"
-                  autoComplete="url"
-                  error={Boolean(formState.errors.destinationUrl)}
-                />
-              </FormField>
-            )}
-          />
-          <Stack direction="row" spacing={2}>
-            {(["qrColor", "bgColor"] as const).map((name) => (
-              <Box key={name} sx={{ flex: 1 }}>
-                <Controller
-                  name={name}
-                  control={control}
-                  render={({ field }) => (
-                    <FormField
-                      label={name === "qrColor" ? t("home.genQrColor") : t("home.genBgColor")}
-                      htmlFor={`guest-${name}`}
-                    >
-                      <TextField
-                        id={`guest-${name}`}
-                        type="color"
-                        value={field.value}
-                        onChange={field.onChange}
-                        inputProps={{ style: { height: 44, padding: 4, cursor: "pointer" } }}
-                      />
-                    </FormField>
-                  )}
-                />
+        ) : (
+          <Box component="form" onSubmit={handleSubmit((v) => generate.mutate(v))}>
+            <Controller
+              name="destinationUrl"
+              control={control}
+              render={({ field }) => (
+                <FormField
+                  label={t("home.genUrl")}
+                  htmlFor="guestDestinationUrl"
+                  error={translateMessage(t, formState.errors.destinationUrl?.message)}
+                >
+                  <TextField
+                    {...field}
+                    id="guestDestinationUrl"
+                    placeholder="www.example.com"
+                    autoComplete="url"
+                    error={Boolean(formState.errors.destinationUrl)}
+                  />
+                </FormField>
+              )}
+            />
+            <Stack direction="row" spacing={2}>
+              {(["qrColor", "bgColor"] as const).map((name) => (
+                <Box key={name} sx={{ flex: 1 }}>
+                  <Controller
+                    name={name}
+                    control={control}
+                    render={({ field }) => (
+                      <FormField
+                        label={name === "qrColor" ? t("home.genQrColor") : t("home.genBgColor")}
+                        htmlFor={`guest-${name}`}
+                      >
+                        <TextField
+                          id={`guest-${name}`}
+                          type="color"
+                          value={field.value}
+                          onChange={field.onChange}
+                          inputProps={{ style: { height: 44, padding: 4, cursor: "pointer" } }}
+                        />
+                      </FormField>
+                    )}
+                  />
+                </Box>
+              ))}
+            </Stack>
+            <Button type="submit" variant="contained" size="large" fullWidth disabled={generate.isPending}>
+              {t("home.genSubmit")}
+            </Button>
+            <Typography variant="body2" color="text.secondary" textAlign="center" sx={{ mt: 1.5 }}>
+              <Box component={LocaleLink} href="/faq" sx={{ color: "primary.main", fontWeight: 600 }}>
+                {t("home.ctaHow")}
               </Box>
-            ))}
-          </Stack>
-          <Button type="submit" variant="contained" size="large" fullWidth disabled={generate.isPending}>
-            {t("home.genSubmit")}
-          </Button>
-        </Box>
-      )}
+            </Typography>
+          </Box>
+        )}
+      </Box>
+
+      <Box sx={{ width: { xs: "100%", sm: 220, md: 260 }, flexShrink: 0, textAlign: "center" }}>
+        <Box
+          component="img"
+          src={result?.src ?? "/features/logo.webp"}
+          alt={result ? t("home.genPreviewAlt") : t("home.genSampleAlt")}
+          sx={{
+            width: "100%",
+            maxWidth: 260,
+            aspectRatio: "1 / 1",
+            objectFit: "contain",
+            borderRadius: 3,
+            display: "block",
+            mx: "auto",
+            bgcolor: "#fff",
+            opacity: result ? 1 : 0.9,
+          }}
+        />
+        {result ? null : (
+          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
+            {t("home.genSample")}
+          </Typography>
+        )}
+      </Box>
     </Paper>
   );
 }

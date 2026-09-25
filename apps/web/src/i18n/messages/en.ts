@@ -37,8 +37,7 @@ export const en = {
     headline: "Create a free QR code online",
     aioSummary:
       "Free QR code generator with logo. Create a QR code, make it yours, change the link anytime without reprinting, and track scans. No ads, no paywall. Made in Thailand.",
-    subtitle:
-      "Scans go through {domain} first, then to your destination — update the URL without reprinting the QR.",
+    subtitle: "Paste a link and get a QR instantly — no sign-up, no expiry, no ads.",
     ctaCreate: "Create a free QR",
     ctaHow: "How it works",
     odometerTitle: "QR codes created on {name}",
@@ -64,6 +63,8 @@ export const en = {
     genBgColor: "Background",
     genSubmit: "Generate QR code",
     genPreviewAlt: "Your generated QR code",
+    genSample: "Example QR with a logo (sign up free to add yours)",
+    genSampleAlt: "Example QR code with a logo",
     genDownload: "Download PNG",
     genAnother: "Make another",
     genSavedNote:

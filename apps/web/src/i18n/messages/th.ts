@@ -38,8 +38,7 @@ export const th: Messages = {
     headline: "สร้าง QR Code ฟรี ออนไลน์",
     aioSummary:
       "สร้าง QR Code ฟรี ทำคิวอาร์โค้ดออนไลน์ใส่โลโก้ได้ เจน QR แล้วเปลี่ยนลิงก์ทีหลังได้โดยไม่ต้องพิมพ์ใหม่ ดูยอดสแกนได้ ไม่มีโฆษณา ไม่บังคับจ่าย พัฒนาโดยนักพัฒนาไทย",
-    subtitle:
-      "สแกนแล้วเข้า {domain} ก่อน แล้วค่อยพาไปลิงก์ของคุณ — เปลี่ยน URL ได้โดยไม่ต้องพิมพ์ QR ใหม่",
+    subtitle: "วางลิงก์ แล้วได้ QR ทันที — ไม่ต้องสมัคร ไม่หมดอายุ ไม่มีโฆษณา",
     ctaCreate: "เริ่มสร้าง QR ฟรี",
     ctaHow: "ดูวิธีใช้",
     odometerTitle: "จำนวน QR ที่สร้างบน {name}",
@@ -65,6 +64,8 @@ export const th: Messages = {
     genBgColor: "สีพื้นหลัง",
     genSubmit: "สร้าง QR Code",
     genPreviewAlt: "QR Code ที่คุณสร้าง",
+    genSample: "ตัวอย่าง QR ใส่โลโก้ (สมัครฟรีเพื่อใส่โลโก้)",
+    genSampleAlt: "ตัวอย่าง QR Code ใส่โลโก้",
     genDownload: "ดาวน์โหลด PNG",
     genAnother: "สร้างอันใหม่",
     genSavedNote:
