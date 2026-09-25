@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import DownloadIcon from "@mui/icons-material/Download";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -203,6 +204,32 @@ export function HomeGenerator() {
                 </Box>
               ))}
             </Stack>
+            <Box
+              component={LocaleLink}
+              href={registerHref}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+                mb: 2.5,
+                px: 2,
+                py: 1.25,
+                borderRadius: 2,
+                border: "1.5px dashed",
+                borderColor: "divider",
+                color: "text.secondary",
+                textDecoration: "none",
+                "&:hover": { borderColor: "primary.main", color: "primary.main" },
+              }}
+            >
+              <LockOutlinedIcon fontSize="small" />
+              <Typography variant="body2" sx={{ flex: 1 }}>
+                {t("home.genLogoLocked")}
+              </Typography>
+              <Typography variant="body2" fontWeight={700} color="primary.main" sx={{ whiteSpace: "nowrap" }}>
+                {t("home.genLogoSignUp")}
+              </Typography>
+            </Box>
             <Button type="submit" variant="contained" size="large" fullWidth disabled={generate.isPending}>
               {t("home.genSubmit")}
             </Button>
